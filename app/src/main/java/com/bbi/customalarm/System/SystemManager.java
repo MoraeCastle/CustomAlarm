@@ -88,7 +88,7 @@ public class SystemManager {
         boolean answer = false;
 
         for (String permission : permissionArray) {
-            int checkCode = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA);
+            int checkCode = ContextCompat.checkSelfPermission(context, permission);
 
             if(checkCode == PackageManager.PERMISSION_DENIED) {
                 answer = true;
@@ -104,7 +104,7 @@ public class SystemManager {
         List<String> answer = new ArrayList<>();
 
         for (String permission : permissionArray) {
-            int checkCode = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA);
+            int checkCode = ContextCompat.checkSelfPermission(context, permission);
 
             if(checkCode == PackageManager.PERMISSION_DENIED) {
                 answer.add(permission);

@@ -22,7 +22,7 @@ public class IntroActivity extends BaseActivity {
         if(getSystem().isDisagreePermission(getApplicationContext(), getResources().getStringArray(R.array.permission_intro))) {
             moveNextScene = PermissionActivity.class;
         } else {
-            moveNextScene = MainActivity.class;
+            moveNextScene = AlarmListActivity.class;
         }
     }
 

@@ -19,8 +19,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".PermissionActivity"/>
+        <activity android:name=".AlarmListActivity"/>
+        <activity android:name=".SettingActivity"/>
         <activity android:name=".MainActivity"/>
     </application>
 
-    <uses-permission android:name="Manifest.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 </manifest>
