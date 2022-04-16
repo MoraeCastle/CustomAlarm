@@ -19,16 +19,22 @@ import com.bbi.customalarm.PermissionActivity;
  */
 public class BaseActivity extends AppCompatActivity {
     private SystemManager system;
+    private UIManager uiManager;
     private Class<?> moveClass;
 
     public SystemManager getSystem() {
         return system;
+    }
+    public UIManager getUiManager() {
+        return uiManager;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         system = new SystemManager();
+        uiManager = new UIManager();
+        uiManager.setContext(this);
 
         system.refreshDeviceSavaData(getApplicationContext());
     }
@@ -44,7 +50,11 @@ public class BaseActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            finish();
+            if(getUiManager().isToastActive()) {
+                finish();
+            } else {
+                getUiManager().printToast(null);
+            }
         }
     }
 }

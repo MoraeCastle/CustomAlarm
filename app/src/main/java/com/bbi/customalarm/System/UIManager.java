@@ -1,0 +1,80 @@
+package com.bbi.customalarm.System;
+
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+
+import android.content.Context;
+import android.content.res.Resources;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.bbi.customalarm.R;
+
+/**
+ * UI 관련 출력
+ */
+public class UIManager {
+    private Context context;
+    private boolean toastActive;
+    private View toastView;
+    private String toastMessage;
+
+    public UIManager() {
+        toastActive = false;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+        toastMessage = context.getString(R.string.toastMessage);
+    }
+
+    // 토스트
+    public void setToastView(View toastView) {
+        this.toastView = toastView;
+    }
+    public void setToastMessage(String toastMessage) {
+        this.toastMessage = toastMessage;
+    }
+    public boolean isToastActive() {
+        return toastActive;
+    }
+
+    public void printToast(String toastMessage) {
+        if(toastView == null) {
+            Toast.makeText(context, "토스트 출력 오류", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(toastActive) {
+            return;
+        }
+
+        toastActive = true;
+        ConstraintLayout toastLayout = null;
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+        toastLayout = (ConstraintLayout) inflater.inflate(R.layout.layout_notice, (ConstraintLayout)toastView, false);
+
+        ((ConstraintLayout) toastView).addView(toastLayout);
+
+        TextView text = toastLayout.findViewById(R.id.noticeLayout_txt);
+        if(toastMessage != null) {
+            text.setText(toastMessage);//스낵바메시지 변경
+        } else {
+            text.setText(this.toastMessage);
+        }
+
+        ConstraintLayout resultLayout = toastLayout;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                resultLayout.setVisibility(View.GONE);//1초 후 스낵바 배경 사라짐
+                toastActive = false;
+            }
+        }, 1500);
+    }
+}

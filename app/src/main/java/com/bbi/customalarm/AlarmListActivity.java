@@ -8,6 +8,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.bbi.customalarm.System.BaseActivity;
 
 public class AlarmListActivity extends BaseActivity {
@@ -23,6 +25,8 @@ public class AlarmListActivity extends BaseActivity {
         settingBtn = findViewById(R.id.alarmList_settingBtn);
         alarmCount = findViewById(R.id.alarmList_alarmCount);
         alarmListView = findViewById(R.id.alarmList_listView);
+
+        getUiManager().setToastView(findViewById(R.id.activity_alarm_list));
     }
 
     @Override
