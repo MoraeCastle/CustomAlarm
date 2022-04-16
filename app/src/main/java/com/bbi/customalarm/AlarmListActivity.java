@@ -6,16 +6,27 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bbi.customalarm.Adapter.AlarmListAdapter;
+import com.bbi.customalarm.Object.AlarmItem;
 import com.bbi.customalarm.System.BaseActivity;
 
+import java.util.ArrayList;
+
+/**
+ * 알람 리스트
+ */
 public class AlarmListActivity extends BaseActivity {
     private ImageView settingBtn;
     private TextView alarmCount;
-    private ListView alarmListView;
+    private RecyclerView alarmListView;
+
+    // 알람 리스트
+    private AlarmListAdapter alarmListAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,7 +35,12 @@ public class AlarmListActivity extends BaseActivity {
 
         settingBtn = findViewById(R.id.alarmList_settingBtn);
         alarmCount = findViewById(R.id.alarmList_alarmCount);
-        alarmListView = findViewById(R.id.alarmList_listView);
+        alarmListView = findViewById(R.id.alarmList_recycleView);
+        alarmListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+
+        alarmListAdapter = new AlarmListAdapter(new ArrayList<>());
+        alarmListView.setAdapter(alarmListAdapter);
+
 
         getUiManager().setToastView(findViewById(R.id.activity_alarm_list));
     }

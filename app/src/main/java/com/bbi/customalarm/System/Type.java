@@ -11,4 +11,12 @@ public class Type {
         Float,
         ETC
     }
+
+    /**
+     * 알람 유형
+     */
+    public enum AlarmType {
+        DayOfTheWeek,
+        Date
+    }
 }
