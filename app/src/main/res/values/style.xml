@@ -5,6 +5,7 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <!--스위치-->
     <style name="Switch" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->
         <item name="colorControlActivated">#46bdbf</item>
@@ -16,5 +17,13 @@
         <!-- inactive track color (30% transparency) -->
         <item name="android:colorForeground">#42221f1f
         </item>
+    </style>
+
+    <!--Number Picker-->
+    <style name="CustomNumberPicker">
+        <item name="android:textSize">35dp</item>
+        <item name="android:colorControlNormal">#00FFFFFF</item>
+        <item name="android:fontFamily">@font/jalnan</item>
+        <item name="android:textColorHighlight">#feffdd</item>
     </style>
 </resources>

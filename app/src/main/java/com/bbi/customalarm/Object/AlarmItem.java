@@ -8,13 +8,13 @@ import com.bbi.customalarm.System.Type;
 public class AlarmItem {
     private Type.AlarmType type;
     private String date;
-    private String time;
+    private int[] time;
     private boolean isActive;
 
     public AlarmItem() {
         type = Type.AlarmType.DayOfTheWeek;
         date = "";
-        time = "";
+        time = new int[2];
         isActive = false;
     }
 
@@ -33,10 +33,10 @@ public class AlarmItem {
         this.date = date;
     }
 
-    public String getTime() {
+    public int[] getTime() {
         return time;
     }
-    public void setTime(String time) {
+    public void setTime(int[] time) {
         this.time = time;
     }
 
@@ -45,5 +45,9 @@ public class AlarmItem {
     }
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getStringTime() {
+        return String.format("%02d", time[0]) + ":" + String.format("%02d", time[1]);
     }
 }

@@ -50,7 +50,7 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
         holder.date.setText(alarmItems.get(position).getDate());
-        holder.time.setText(alarmItems.get(position).getTime());
+        holder.time.setText(alarmItems.get(position).getStringTime());
         holder.activeBtn.setChecked(alarmItems.get(position).isActive());
     }
 

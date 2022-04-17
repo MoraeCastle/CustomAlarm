@@ -9,15 +9,24 @@
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable-v24/permission_view_back.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable-v24/permission_view_button.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/alarm_back.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/alarm_info_back.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/alarm_info_bottom.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/alarm_item.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/alarm_small_back.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/button_off.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/button_on.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/data_button.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/day_btn.xml" value="0.23055555555555557" />
+        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/day_btn_off.xml" value="0.2574074074074074" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/item_alarm_info.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/drawable/notice_back.xml" value="0.26979166666666665" />
-        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/activity_alarm_list.xml" value="0.264" />
+        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/activity_alarm_info.xml" value="0.46691176470588236" />
+        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/activity_alarm_list.xml" value="0.72" />
+        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/activity_chat_info.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/activity_intro.xml" value="0.264" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/activity_permission.xml" value="0.264" />
-        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/activity_setting.xml" value="0.264" />
+        <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/activity_setting.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/item_alarm.xml" value="0.4" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/item_alarm_info.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/Jeong/AndroidStudioProjects/CustomAlarm/app/src/main/res/layout/layout_notice.xml" value="0.2" />

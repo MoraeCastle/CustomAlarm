@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.961"/>
+
     <ImageView
         android:id="@+id/alarmList_settingBtn"
         android:layout_width="0dp"
@@ -119,6 +120,7 @@
 
     <!--리스트-->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/alarmList_listLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="@+id/line5"
@@ -131,4 +133,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/alarmList_addAlarmBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="30dp"
+        android:background="@drawable/add_alarm"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.166"
+        app:layout_constraintBottom_toBottomOf="@+id/alarmList_listLayout"
+        app:layout_constraintRight_toRightOf="@+id/alarmList_listLayout"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:screenOrientation="portrait"
+        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".IntroActivity">
@@ -20,6 +21,7 @@
         </activity>
         <activity android:name=".PermissionActivity"/>
         <activity android:name=".AlarmListActivity"/>
+        <activity android:name=".AlarmInfoActivity"/>
         <activity android:name=".SettingActivity"/>
         <activity android:name=".MainActivity"/>
     </application>
