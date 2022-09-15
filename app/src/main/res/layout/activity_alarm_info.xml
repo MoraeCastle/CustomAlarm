@@ -53,7 +53,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/alarm_info_back"
-        android:elevation="10dp"
+        android:elevation="5dp"
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
@@ -102,6 +102,7 @@
         android:id="@+id/alarmInfo_selectTypeLayout"
         android:orientation="horizontal"
         android:gravity="center"
+        android:elevation="5dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/alarm_info_back"
@@ -148,13 +149,13 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/alarm_info_back"
-        android:elevation="10dp"
+        android:elevation="5dp"
         app:layout_constraintWidth_percent="0.838"
         app:layout_constraintTop_toBottomOf="@+id/empty02"
         app:layout_constraintBottom_toBottomOf="@+id/line3"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
-        <ScrollView
+        <LinearLayout
             android:id="@+id/alarmInfo_scrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -168,7 +169,7 @@
                 android:layout_height="match_parent">
                 <LinearLayout
                     android:id="@+id/alarmInfo_dateTitle"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="5dp"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:gravity="center"
@@ -195,109 +196,126 @@
                             android:id="@+id/alarmInfo_dateTxt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="12dp"
+                            android:layout_marginLeft="20dp"
                             android:fontFamily="@font/jalnan"
                             android:textColor="@color/black"
                             android:textSize="20dp"
                             android:text="2021-04-15 (금)"/>
                     </LinearLayout>
-                    <LinearLayout
+                    <TableLayout
                         android:id="@+id/alarmInfo_choseDayOfWeek"
                         android:visibility="gone"
                         android:gravity="center"
                         android:paddingTop="5dp"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:paddingBottom="10dp"
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent">
-                        <Button
-                            android:layout_weight="1"
-                            android:id="@+id/alarmInfo_day01"
-                            android:elevation="5dp"
-                            android:background="@drawable/day_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="일"
-                            android:textSize="20dp"
-                            android:fontFamily="@font/jalnan"
-                            android:textColor="#FF0000"/>
-                        <Button
-                            android:layout_weight="1"
-                            android:id="@+id/alarmInfo_day02"
-                            android:elevation="5dp"
-                            android:background="@drawable/day_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="월"
-                            android:textSize="20dp"
-                            android:fontFamily="@font/jalnan"
-                            android:textColor="@color/black" />
-                        <Button
-                            android:layout_weight="1"
-                            android:id="@+id/alarmInfo_day03"
-                            android:elevation="5dp"
-                            android:background="@drawable/day_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="화"
-                            android:textSize="20dp"
-                            android:fontFamily="@font/jalnan"
-                            android:textColor="@color/black"
-                            app:layout_constraintTop_toTopOf="parent"/>
-                        <Button
-                            android:layout_weight="1"
-                            android:id="@+id/alarmInfo_day04"
-                            android:elevation="5dp"
-                            android:background="@drawable/day_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="수"
-                            android:textSize="20dp"
-                            android:fontFamily="@font/jalnan"
-                            android:textColor="@color/black"/>
-                        <Button
-                            android:layout_weight="1"
-                            android:id="@+id/alarmInfo_day05"
-                            android:elevation="5dp"
-                            android:background="@drawable/day_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="목"
-                            android:textSize="20dp"
-                            android:fontFamily="@font/jalnan"
-                            android:textColor="@color/black"/>
-                        <Button
-                            android:layout_weight="1"
-                            android:id="@+id/alarmInfo_day06"
-                            android:elevation="5dp"
-                            android:background="@drawable/day_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="금"
-                            android:textSize="20dp"
-                            android:fontFamily="@font/jalnan"
-                            android:textColor="@color/black"/>
-                        <Button
-                            android:layout_weight="1"
-                            android:id="@+id/alarmInfo_day07"
-                            android:elevation="5dp"
-                            android:background="@drawable/day_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="토"
-                            android:textSize="20dp"
-                            android:fontFamily="@font/jalnan"
-                            android:textColor="#0043ff"/>
-                    </LinearLayout>
+                        android:paddingBottom="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:stretchColumns="*"
+                        android:shrinkColumns="*">
+                        <TableRow>
+                            <Button
+                                android:id="@+id/alarmInfo_day01"
+                                android:stateListAnimator="@null"
+                                android:background="@drawable/day_btn"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginRight="5dp"
+                                android:text="일"
+                                android:padding="5dp"
+                                android:autoSizeTextType="uniform"
+                                android:autoSizeMaxTextSize="30dp"
+                                android:autoSizeMinTextSize="5dp"
+                                android:fontFamily="@font/jalnan"
+                                android:textColor="#FF0000"/>
+                            <Button
+                                android:id="@+id/alarmInfo_day02"
+                                android:stateListAnimator="@null"
+                                android:background="@drawable/day_btn"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginRight="5dp"
+                                android:text="월"
+                                android:padding="5dp"
+                                android:autoSizeTextType="uniform"
+                                android:autoSizeMaxTextSize="30dp"
+                                android:autoSizeMinTextSize="5dp"
+                                android:fontFamily="@font/jalnan"
+                                android:textColor="@color/black" />
+                            <Button
+                                android:id="@+id/alarmInfo_day03"
+                                android:stateListAnimator="@null"
+                                android:background="@drawable/day_btn"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginRight="5dp"
+                                android:text="화"
+                                android:padding="5dp"
+                                android:autoSizeTextType="uniform"
+                                android:autoSizeMaxTextSize="30dp"
+                                android:autoSizeMinTextSize="5dp"
+                                android:fontFamily="@font/jalnan"
+                                android:textColor="@color/black"
+                                app:layout_constraintTop_toTopOf="parent"/>
+                            <Button
+                                android:id="@+id/alarmInfo_day04"
+                                android:stateListAnimator="@null"
+                                android:background="@drawable/day_btn"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginRight="5dp"
+                                android:text="수"
+                                android:padding="5dp"
+                                android:autoSizeTextType="uniform"
+                                android:autoSizeMaxTextSize="30dp"
+                                android:autoSizeMinTextSize="5dp"
+                                android:fontFamily="@font/jalnan"
+                                android:textColor="@color/black"/>
+                            <Button
+                                android:id="@+id/alarmInfo_day05"
+                                android:stateListAnimator="@null"
+                                android:background="@drawable/day_btn"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginRight="5dp"
+                                android:text="목"
+                                android:padding="5dp"
+                                android:autoSizeTextType="uniform"
+                                android:autoSizeMaxTextSize="30dp"
+                                android:autoSizeMinTextSize="5dp"
+                                android:fontFamily="@font/jalnan"
+                                android:textColor="@color/black"/>
+                            <Button
+                                android:id="@+id/alarmInfo_day06"
+                                android:stateListAnimator="@null"
+                                android:background="@drawable/day_btn"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginRight="5dp"
+                                android:text="금"
+                                android:padding="5dp"
+                                android:autoSizeTextType="uniform"
+                                android:autoSizeMaxTextSize="30dp"
+                                android:autoSizeMinTextSize="5dp"
+                                android:fontFamily="@font/jalnan"
+                                android:textColor="@color/black"/>
+                            <Button
+                                android:id="@+id/alarmInfo_day07"
+                                android:stateListAnimator="@null"
+                                android:background="@drawable/day_btn"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginRight="5dp"
+                                android:text="토"
+                                android:padding="5dp"
+                                android:autoSizeTextType="uniform"
+                                android:autoSizeMaxTextSize="30dp"
+                                android:autoSizeMinTextSize="5dp"
+                                android:fontFamily="@font/jalnan"
+                                android:textColor="#0043ff"/>
+                        </TableRow>
+                    </TableLayout>
                 </LinearLayout>
                 <View
                     android:id="@+id/empty03"
@@ -317,218 +335,144 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/alarmInfo_dateTitle"
-                    app:layout_constraintDimensionRatio="466:30"
+                    app:layout_constraintDimensionRatio="466:10"
                     app:layout_constraintWidth_percent="0.772"/>
 
-                <!--알람 이름-->
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/alarmInfo_alarmNameLayout"
+                <!--내용-->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:orientation="horizontal"
                     app:layout_constraintTop_toBottomOf="@+id/empty04"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintDimensionRatio="603.3:100"
-                    app:layout_constraintWidth_percent="0.85">
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/line5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.2"/>
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:src="@drawable/edit_img"
-                        android:padding="10dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/line5"/>
-                    <EditText
-                        android:id="@+id/alarmInfo_alarmNameEdit"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:src="@drawable/edit_img"
-                        android:hint="이름"
-                        android:textSize="15dp"
-                        app:layout_constraintWidth_percent="0.7"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/line5"
-                        app:layout_constraintEnd_toEndOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/empty05"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@null"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/alarmInfo_alarmNameLayout"
-                    app:layout_constraintDimensionRatio="466:10"
-                    app:layout_constraintWidth_percent="0.772"/>
-
-                <!--알람음-->
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/alarmInfo_alarmRingLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@+id/empty05"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintDimensionRatio="603.3:100"
-                    app:layout_constraintWidth_percent="0.85">
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/line6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.2"/>
-                    <ImageButton
-                        android:id="@+id/alarmInfo_alarmRingBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/notifications_black"
-                        android:padding="10dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/line6"
-                        android:background="#00FFFFFF"
-                        android:scaleType="fitCenter"/>
-                    <TextView
-                        android:id="@+id/alarmInfo_alarmRingTxt"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:src="@drawable/edit_img"
+                    app:layout_constraintRight_toRightOf="parent">
+                    <LinearLayout
                         android:gravity="center"
-                        android:text="알람을 선택하세요..."
-                        android:textSize="15dp"
-                        app:layout_constraintWidth_percent="0.7"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/line6"
-                        app:layout_constraintEnd_toEndOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/empty06"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@null"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/alarmInfo_alarmRingLayout"
-                    app:layout_constraintDimensionRatio="466:10"
-                    app:layout_constraintWidth_percent="0.772"/>
-
-                <!--알람음-->
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/alarmInfo_alarmCallLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@+id/empty06"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintDimensionRatio="603.3:100"
-                    app:layout_constraintWidth_percent="0.85">
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/line7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:padding="20dp"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.2"/>
-                    <ImageButton
-                        android:id="@+id/alarmInfo_alarmCallBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:src="@drawable/call_img"
-                        android:adjustViewBounds="true"
-                        android:padding="10dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/line7"
-                        android:background="#00FFFFFF"
-                        android:scaleType="fitCenter"/>
-                    <TextView
-                        android:id="@+id/alarmInfo_alarmCallTxt"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:src="@drawable/edit_img"
-                        android:gravity="center"
-                        android:text="진동 패턴을 선택하세요..."
-                        android:textSize="15dp"
-                        app:layout_constraintWidth_percent="0.7"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/line7"
-                        app:layout_constraintEnd_toEndOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <!--알람 이름-->
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:id="@+id/alarmInfo_alarmNameLayout"
+                            android:gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:adjustViewBounds="true"
+                                android:background="#00FFFFFF"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/edit_img"
+                                android:padding="10dp"/>
+                            <EditText
+                                android:id="@+id/alarmInfo_alarmNameEdit"
+                                android:layout_marginLeft="20dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/edit_img"
+                                android:hint="알람 이름"
+                                android:textSize="15dp"/>
+                        </LinearLayout>
 
-                <View
-                    android:id="@+id/empty07"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@null"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/alarmInfo_alarmCallLayout"
-                    app:layout_constraintDimensionRatio="466:10"
-                    app:layout_constraintWidth_percent="0.772"/>
+                        <!--알람음-->
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:id="@+id/alarmInfo_alarmRingLayout"
+                            android:gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <ImageButton
+                                android:id="@+id/alarmInfo_alarmRingBtn"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:adjustViewBounds="true"
+                                android:background="#00FFFFFF"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/notifications_black"
+                                android:padding="10dp"/>
+                            <TextView
+                                android:id="@+id/alarmInfo_alarmRingTxt"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="20dp"
+                                android:src="@drawable/edit_img"
+                                android:gravity="center"
+                                android:text="알람 선택"
+                                android:textSize="15dp"/>
+                        </LinearLayout>
 
-                <!--알람음-->
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/alarmInfo_alarmReCallLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@+id/empty07"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintDimensionRatio="603.3:100"
-                    app:layout_constraintWidth_percent="0.85">
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/line8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.2"/>
-                    <ImageButton
-                        android:id="@+id/alarmInfo_alarmReCallBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:src="@drawable/autorenew_black"
-                        android:adjustViewBounds="true"
-                        android:padding="10dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/line8"
-                        android:background="#00FFFFFF"
-                        android:scaleType="fitCenter"/>
-                    <TextView
-                        android:id="@+id/alarmInfo_alarmReCallTxt"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:src="@drawable/edit_img"
-                        android:gravity="center"
-                        android:text="반복 없음"
-                        android:textSize="15dp"
-                        app:layout_constraintWidth_percent="0.7"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/line8"
-                        app:layout_constraintEnd_toEndOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <!--알람음-->
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:id="@+id/alarmInfo_alarmCallLayout"
+                            android:gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <ImageButton
+                                android:id="@+id/alarmInfo_alarmCallBtn"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:src="@drawable/call_img"
+                                android:padding="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="#00FFFFFF"
+                                android:scaleType="fitCenter"/>
+                            <TextView
+                                android:id="@+id/alarmInfo_alarmCallTxt"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="20dp"
+                                android:src="@drawable/edit_img"
+                                android:gravity="center"
+                                android:text="진동 패턴 선택"
+                                android:textSize="15dp" />
+                        </LinearLayout>
+
+                        <!--알람음-->
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:id="@+id/alarmInfo_alarmReCallLayout"
+                            android:gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <ImageButton
+                                android:id="@+id/alarmInfo_alarmReCallBtn"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:src="@drawable/autorenew_black"
+                                android:padding="10dp"
+                                android:adjustViewBounds="true"
+                                android:background="#00FFFFFF"
+                                android:scaleType="fitCenter"/>
+                            <TextView
+                                android:id="@+id/alarmInfo_alarmReCallTxt"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="20dp"
+                                android:src="@drawable/edit_img"
+                                android:gravity="center"
+                                android:text="반복 선택"
+                                android:textSize="15dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/alarmInfo_buttonLayout"
             android:layout_width="0dp"
@@ -539,14 +483,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintHeight_percent="0.178">
+            app:layout_constraintHeight_percent="0.13">
             <Button
                 android:id="@+id/alarmInfo_saveBtn"
                 android:layout_weight="1"
                 android:background="@null"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="20dp"
+                android:textSize="15dp"
                 android:textColor="#99000000"
                 android:fontFamily="@font/jalnan"
                 android:text="저장"/>
@@ -563,7 +507,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="#99000000"
-                android:textSize="20dp"
+                android:textSize="15dp"
                 android:fontFamily="@font/jalnan"
                 android:text="취소"/>
         </LinearLayout>

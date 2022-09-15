@@ -103,6 +103,21 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    // 모두 삭제
+    public static class DeleteAllAsyncTask extends AsyncTask<AlarmItem, Void, Void> {
+        private AlarmDao alarmDao;
+
+        public DeleteAllAsyncTask(AlarmDao memoDao){
+            this.alarmDao = memoDao;
+        }
+
+        @Override
+        protected Void doInBackground(AlarmItem... memoItems) {
+            alarmDao.deleteAll();
+            return null;
+        }
+    }
+
     // 업데이트
     public static class UpdateAsyncTask extends AsyncTask<AlarmItem, Void, Void> {
         private AlarmDao alarmDao;

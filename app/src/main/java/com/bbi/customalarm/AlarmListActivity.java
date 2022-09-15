@@ -1,9 +1,13 @@
 package com.bbi.customalarm;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +26,7 @@ import java.util.List;
  * 알람 리스트
  */
 public class AlarmListActivity extends BaseActivity {
+    private final String TAG = "AlarmInfoActivity";
     private ImageView settingBtn;
     private TextView alarmCount;
     private RecyclerView alarmListView;
@@ -57,6 +62,7 @@ public class AlarmListActivity extends BaseActivity {
                 alarmItemList.clear();
                 alarmListAdapter.notifyDataSetChanged();
 
+                Log.d(TAG, "조회된 알람 갯수: " + alarmItems.size());
                 for (AlarmItem alarmItem : alarmItems) {
                     alarmItemList.add(alarmItem);
                     alarmListAdapter.notifyDataSetChanged();
@@ -84,6 +90,25 @@ public class AlarmListActivity extends BaseActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), AlarmInfoActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        alarmListAdapter.setOnItemLongClickListener(new AlarmListAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View view, int position) {
+                //다이얼로그에 리스트 담기
+                AlertDialog.Builder builder = new AlertDialog.Builder(AlarmListActivity.this);
+                builder.setTitle("알람 삭제");
+                builder.setMessage("알람을 삭제하시겠습니까?");
+                builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        new DeleteAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItemList.get(position));
+                        getUiManager().printToast("삭제되었습니다.");
+                    }
+                });
+                builder.setNegativeButton("아니오", null);
+                builder.show();
             }
         });
     }
