@@ -5,6 +5,7 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -45,14 +46,15 @@ public class UIManager {
 
     public void printToast(String toastMessage) {
         if(toastView == null) {
+            Log.d("TESTING", "1");
             Toast.makeText(context, "토스트 출력 오류", Toast.LENGTH_LONG).show();
             return;
         }
-
+        Log.d("TESTING", "2");
         if(toastActive) {
             return;
         }
-
+        Log.d("TESTING", "3");
         toastActive = true;
         ConstraintLayout toastLayout = null;
 
@@ -76,5 +78,17 @@ public class UIManager {
                 toastActive = false;
             }
         }, 1500);
+    }
+    
+    public static String getDayOfWeek(int num) {
+        switch (num) {
+            case 1: return "월";
+            case 2: return "화";
+            case 3: return "수";
+            case 4: return "목";
+            case 5: return "금";
+            case 6: return "토";
+            default: return "일";
+        }
     }
 }

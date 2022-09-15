@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:elevation="150dp"
     android:background="#00FFFFFF"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.constraintlayout.widget.Guideline
@@ -29,11 +30,12 @@
             android:text="한번 더 뒤로 누르면 앱이 종료됩니다"
             app:autoSizeMaxTextSize="40dp"
             app:autoSizeMinTextSize="1dp"
+            app:autoSizeTextType="uniform"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintWidth_percent="0.8"
-            app:layout_constraintHeight_percent="0.3"/>
+            app:layout_constraintHeight_percent="0.4"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

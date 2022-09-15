@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_alarm_info"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/appColor"
@@ -387,15 +388,19 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         app:layout_constraintGuide_percent="0.2"/>
-                    <ImageView
+                    <ImageButton
+                        android:id="@+id/alarmInfo_alarmRingBtn"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
+                        android:adjustViewBounds="true"
                         android:src="@drawable/notifications_black"
                         android:padding="10dp"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/line6"/>
+                        app:layout_constraintEnd_toEndOf="@+id/line6"
+                        android:background="#00FFFFFF"
+                        android:scaleType="fitCenter"/>
                     <TextView
                         android:id="@+id/alarmInfo_alarmRingTxt"
                         android:layout_width="0dp"
@@ -439,15 +444,19 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         app:layout_constraintGuide_percent="0.2"/>
-                    <ImageView
+                    <ImageButton
+                        android:id="@+id/alarmInfo_alarmCallBtn"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:src="@drawable/call_img"
+                        android:adjustViewBounds="true"
                         android:padding="10dp"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/line7"/>
+                        app:layout_constraintEnd_toEndOf="@+id/line7"
+                        android:background="#00FFFFFF"
+                        android:scaleType="fitCenter"/>
                     <TextView
                         android:id="@+id/alarmInfo_alarmCallTxt"
                         android:layout_width="0dp"
@@ -491,15 +500,19 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         app:layout_constraintGuide_percent="0.2"/>
-                    <ImageView
+                    <ImageButton
+                        android:id="@+id/alarmInfo_alarmReCallBtn"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:src="@drawable/autorenew_black"
+                        android:adjustViewBounds="true"
                         android:padding="10dp"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/line8"/>
+                        app:layout_constraintEnd_toEndOf="@+id/line8"
+                        android:background="#00FFFFFF"
+                        android:scaleType="fitCenter"/>
                     <TextView
                         android:id="@+id/alarmInfo_alarmReCallTxt"
                         android:layout_width="0dp"
@@ -528,6 +541,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintHeight_percent="0.178">
             <Button
+                android:id="@+id/alarmInfo_saveBtn"
                 android:layout_weight="1"
                 android:background="@null"
                 android:layout_width="match_parent"
@@ -543,6 +557,7 @@
                 android:layout_height="match_parent"
                 android:background="#88000000"/>
             <Button
+                android:id="@+id/alarmInfo_cancelBtn"
                 android:layout_weight="1"
                 android:background="@null"
                 android:layout_width="match_parent"

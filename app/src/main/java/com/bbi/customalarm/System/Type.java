@@ -19,4 +19,10 @@ public class Type {
         DayOfTheWeek,
         Date
     }
+    public static String DayOfTheWeek = "DayOfTheWeek";
+    public static String Date = "Date";
+
+
+    // Intent
+    public static String AlarmId = "AlarmId";
 }
