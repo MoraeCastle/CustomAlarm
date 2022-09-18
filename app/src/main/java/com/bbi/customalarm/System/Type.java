@@ -25,4 +25,5 @@ public class Type {
 
     // Intent
     public static String AlarmId = "AlarmId";
+    public static String AlarmData = "alarmDataList";
 }

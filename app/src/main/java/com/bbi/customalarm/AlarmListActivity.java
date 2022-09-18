@@ -53,8 +53,6 @@ public class AlarmListActivity extends BaseActivity {
     private boolean isAddAlarmClick = false;
     private ArrayList<AlarmItem> alarmItemList;
 
-    private VibrationManager vibratorManager;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,8 +112,6 @@ public class AlarmListActivity extends BaseActivity {
                 alarmListAdapter.notifyDataSetChanged();
             }
         });
-
-        vibratorManager = new VibrationManager(this);
     }
 
     @Override
@@ -127,6 +123,17 @@ public class AlarmListActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+                /*Intent intent = new Intent(getApplicationContext(), AlarmPrintActivity.class);
+
+                String[] data = new String[]{
+                        alarmItemList.get(0).getDate(),
+                        alarmItemList.get(0).getTime(),
+                        alarmItemList.get(0).getName(),
+                        alarmItemList.get(0).getRingUri().toString(),
+                        alarmItemList.get(0).getVibrationType()
+                };
+
+                intent.putExtra(Type.AlarmData, data);*/
                 startActivity(intent);
             }
         });
