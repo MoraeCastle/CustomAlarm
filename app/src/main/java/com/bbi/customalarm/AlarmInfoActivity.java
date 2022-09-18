@@ -1,8 +1,11 @@
 package com.bbi.customalarm;
 
+import static com.bbi.customalarm.Object.AlarmItem.convertDayOfWeek;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -21,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -36,6 +40,7 @@ import com.bbi.customalarm.Adapter.AlarmListAdapter;
 import com.bbi.customalarm.Object.AlarmItem;
 import com.bbi.customalarm.System.BaseActivity;
 import com.bbi.customalarm.System.Type;
+import com.bbi.customalarm.System.VibrationManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +57,7 @@ public class AlarmInfoActivity extends BaseActivity {
     private NumberPicker hourPicker, minutePicker;
 
     private AlarmItem alarmItem;
+    private boolean isEditMode = false;
 
     private Button saveBtn, cancelBtn, openDateBtn, saveDateBtn;
     private ConstraintLayout subLayout;
@@ -60,7 +66,9 @@ public class AlarmInfoActivity extends BaseActivity {
     private Button selectDate, selectDayOfWeek;
     private LinearLayout choseDate;
     private TableLayout choseDayOfWeek;
+    private TableRow choseDayOfWeekRow;
     private View.OnClickListener weekBtnListener;
+    List<View> views = new ArrayList<View>();
     private Button week1Btn, week2Btn, week3Btn, week4Btn, week5Btn, week6Btn, week7Btn;
 
     // 데이터
@@ -77,12 +85,17 @@ public class AlarmInfoActivity extends BaseActivity {
     private MediaPlayer mMediaPlayer;
     private ImageButton ringBtn, callBtn, reCallBtn;
     private String m_strRingToneUri;
+    private VibrationManager vibratorManager;
+
+    private Drawable dayOff;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_info);
-        setMoveClass(AlarmListActivity.class);
+        //setMoveClass(AlarmListActivity.class);
+        setMoveClassToastMsg("한번 더 터치시 저장내용이 사라집니다.");
+        vibratorManager = new VibrationManager(this);
 
         backBtn = findViewById(R.id.alarmInfo_backBtn);
         hourPicker = findViewById(R.id.alarmInfo_hourPicker);
@@ -98,13 +111,34 @@ public class AlarmInfoActivity extends BaseActivity {
         selectDayOfWeek = findViewById(R.id.alarmInfo_selectDayOfWeek);
         choseDate = findViewById(R.id.alarmInfo_choseDate);
         choseDayOfWeek = findViewById(R.id.alarmInfo_choseDayOfWeek);
+        choseDayOfWeekRow = findViewById(R.id.alarmInfo_choseDayOfWeekRow);
+
+        dayOff = getResources().getDrawable(R.drawable.day_btn_off);
         weekBtnListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //int position = -1;
+                int position = -1;
+
+                for (View button : views) {
+                    if(button.equals(view)) {
+                        position = views.indexOf(button);
+                        break;
+                    }
+                }
+
+                // 안눌렸는지?
                 if(view.getBackground().getConstantState() == getResources().getDrawable(R.drawable.day_btn).getConstantState()) {
                     view.setBackground(getResources().getDrawable(R.drawable.day_btn_off));
+
+                    String dayString = convertDayOfWeek(position);
+                    Log.d(TAG, dayString + " 넣기");
+                    if(!alarmItem.getDayOfWeek().contains(dayString)) {
+                        alarmItem.getDayOfWeek().add(dayString);
+                    }
                 } else {
                     view.setBackground(getResources().getDrawable(R.drawable.day_btn));
+                    alarmItem.getDayOfWeek().remove(convertDayOfWeek(position));
                 }
             }
         };
@@ -115,6 +149,13 @@ public class AlarmInfoActivity extends BaseActivity {
         week5Btn = findViewById(R.id.alarmInfo_day05);
         week6Btn = findViewById(R.id.alarmInfo_day06);
         week7Btn = findViewById(R.id.alarmInfo_day07);
+        views.add(week1Btn);
+        views.add(week2Btn);
+        views.add(week3Btn);
+        views.add(week4Btn);
+        views.add(week5Btn);
+        views.add(week6Btn);
+        views.add(week7Btn);
 
         week1Btn.setOnClickListener(weekBtnListener);
         week2Btn.setOnClickListener(weekBtnListener);
@@ -158,16 +199,19 @@ public class AlarmInfoActivity extends BaseActivity {
         saveIntent = getIntent();
 
         if (saveIntent.hasExtra(Type.AlarmId)) {
-            alarmItem.setId(saveIntent.getIntExtra(Type.AlarmId, 0));
+            alarmItem.setId(saveIntent.getIntExtra(Type.AlarmId, -1));
+            Log.e(TAG, " 0 아이디는 " + saveIntent.getIntExtra(Type.AlarmId, -1));
+            isEditMode = true;
         }
 
         getAlarmDatabase().alarmDao().getAll().observe(this, new Observer<List<AlarmItem>>() {
             @Override
             public void onChanged(List<AlarmItem> alarmItems) {
-                Log.e(TAG, alarmItems.toString());
-
                 // 새로 생성한 알람...
+                // 초기 생성시 id는 0임.
                 if (alarmItem.getId() == 0) {
+                    Log.e(TAG, " 1 아이디는 " + alarmItem.getId());
+                    // 현재 시간으로 세팅.
                     alarmItem.setStringToDate(
                             datePicker.getYear(),
                             datePicker.getMonth() + 1,
@@ -176,6 +220,8 @@ public class AlarmInfoActivity extends BaseActivity {
                     for (AlarmItem item : alarmItems) {
                         if (item.getId() == alarmItem.getId()) {
                             alarmItem = item;
+
+                            setUIFromData(alarmItem);
                             break;
                         }
                     }
@@ -257,19 +303,27 @@ public class AlarmInfoActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if (isAllDataEdit()) {
-                    new InsertAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItem);
-                    onBackPressed();
-                } else {
-                    Log.d(TAG, "ddd");
-                    getUiManager().printToast("모든 내용을 입력해주세요");
+                    try {
+                        // 요일 재정렬.
+                        if(!alarmItem.getType().equals("Date")) {
+                            alarmItem.setDayOfWeek(AlarmItem.resetDayOfWeek(alarmItem.getDayOfWeek()));
+                        }
+                        if(isEditMode) {
+                            new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItem);
+                        } else {
+                            new InsertAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItem);
+                        }
+                        finish();
+                    } catch (Exception e) {
+                        getUiManager().printToast("저장에 실패했습니다. 다시 시도해주세요.");
+                    }
                 }
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AlarmListActivity.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
 
@@ -313,7 +367,26 @@ public class AlarmInfoActivity extends BaseActivity {
                 builder.setItems(getResources().getStringArray(R.array.alarm_vibration_type), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int position) {
-                        callType.setText(array.get(position));
+                        VibrationManager.VibrateType type = null;
+
+                        switch (position) {
+                            case 0: break;
+                            case 1: type = VibrationManager.VibrateType.Knock; break;
+                            case 2: type = VibrationManager.VibrateType.Whirlpool; break;
+                            case 3: type = VibrationManager.VibrateType.Kicking; break;
+                        }
+
+                        if(type != null) {
+                            vibratorManager.setType(type);
+                            vibratorManager.vibrate(-1);
+                            callType.setText(array.get(position));
+                            alarmItem.setVibrationType(String.valueOf(VibrationManager.VibrateType.values()[position - 1]));
+                        } else {
+                            callType.setText(getString(R.string.default_callType));
+                            alarmItem.setVibrationType("");
+                        }
+
+                        Log.d(TAG, alarmItem.getVibrationType() + " 으로 저장");
                     }
                 });
 
@@ -332,7 +405,14 @@ public class AlarmInfoActivity extends BaseActivity {
                 builder.setItems(getResources().getStringArray(R.array.alarm_vibration_count), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int position) {
-                        reCallType.setText(array.get(position));
+                        if(position != 0) {
+                            reCallType.setText(array.get(position));
+                            int repeat = Integer.parseInt(array.get(position).replace("분", ""));
+                            alarmItem.setRepeat(repeat);
+                        } else {
+                            reCallType.setText(getResources().getString(R.string.default_reCallType));
+                            alarmItem.setRepeat(0);
+                        }
                     }
                 });
 
@@ -385,12 +465,20 @@ public class AlarmInfoActivity extends BaseActivity {
     }
 
     // 모두 입력 체크
-    // 하나라도 안되면 false;
+    // 진동, 반복 여부는 X.
     private boolean isAllDataEdit() {
-        if (typeAlarmName.getHint().toString().equals(getString(R.string.default_typeAlarmName))
-                || ringName.getText().toString().equals(getString(R.string.default_ringType))
-                || callType.getText().toString().equals(getString(R.string.default_callType))
-                || reCallType.getText().toString().equals(getString(R.string.default_reCallType))) {
+        if(!alarmItem.getType().equals("Date")) {
+            if(alarmItem.getDayOfWeek().size() == 1 && alarmItem.getDayOfWeek().contains("")) {
+                getUiManager().printToast("요일을 하나 이상 선택해주세요.");
+                return false;
+            }
+        }
+
+        if (typeAlarmName.getText().toString().equals("")){
+            getUiManager().printToast("알람 이름을 입력해주세요.");
+            return false;
+        } else if (ringName.getText().toString().equals(getString(R.string.default_ringType))) {
+            getUiManager().printToast("알람음을 선택해주세요.");
             return false;
         } else {
             return true;
@@ -454,6 +542,7 @@ public class AlarmInfoActivity extends BaseActivity {
             //-- 선택된 링톤을 재생하도록 한다.
             if (resultCode == RESULT_OK) {
                 Uri ring = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                alarmItem.setRingUri(ring);
 
                 String fileName = DocumentFile.fromSingleUri(this, ring).getName().replace(".ogg", "");
 
@@ -464,6 +553,48 @@ public class AlarmInfoActivity extends BaseActivity {
                     ringName.setText( getResources().getString(R.string.default_ringType));
                 }
             }
+        }
+    }
+
+    /*@Override
+    public void onBackPressed() {
+        finish();
+    }*/
+
+    /**
+     * 해당 데이터에 맞게 UI를 최신화합니다.
+     */
+    private void setUIFromData(AlarmItem item) {
+        Log.e(TAG, " 2 아이디는 " + item.getId());
+        if(!item.getTime().equals("00:00")) {
+            String[] time = item.getTime().split(":");
+            hourPicker.setValue(Integer.parseInt(time[0]));
+            minutePicker.setValue(Integer.parseInt(time[1]));
+        }
+
+        Log.e(TAG, "선택된 아이템 : " + item.getType());
+        if(item.getType().equals("Date")) {
+            selectAlarmType(Type.Date);
+        } else {
+            selectAlarmType(Type.DayOfTheWeek);
+
+            for (String dayString : item.getDayOfWeek()) {
+                int position = AlarmItem.getDayOfWeekPosition(dayString);
+                choseDayOfWeekRow.getChildAt(position).setBackground(dayOff);
+            }
+            //week1Btn.setBackground(getResources().getDrawable(R.drawable.day_btn_off));
+        }
+
+        typeAlarmName.setText(item.getName());
+        ringName.setText(DocumentFile.fromSingleUri(AlarmInfoActivity.this, item.getRingUri())
+                .getName().replace(".ogg", ""));
+
+        if(!item.getVibrationType().equals("")) {
+            String type = VibrationManager.getKType(item.getVibrationType());
+            callType.setText(type);
+        }
+        if(item.getRepeat() != 0) {
+            reCallType.setText(item.getRepeat() + "분");
         }
     }
 }

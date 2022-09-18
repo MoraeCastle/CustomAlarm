@@ -214,7 +214,8 @@
                         android:layout_height="match_parent"
                         android:stretchColumns="*"
                         android:shrinkColumns="*">
-                        <TableRow>
+                        <TableRow
+                            android:id="@+id/alarmInfo_choseDayOfWeekRow">
                             <Button
                                 android:id="@+id/alarmInfo_day01"
                                 android:stateListAnimator="@null"

@@ -1,18 +1,18 @@
 package com.bbi.customalarm.Room;
 
 import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.DatabaseConfiguration;
 import androidx.room.InvalidationTracker;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
-
 import com.bbi.customalarm.Object.AlarmItem;
 
 @Database(entities = {AlarmItem.class}, version = 1)
+@TypeConverters({Converters.class})
 public abstract class AlarmDatabase extends RoomDatabase {
     private static AlarmDatabase INSTANCE;
     public abstract AlarmDao alarmDao();

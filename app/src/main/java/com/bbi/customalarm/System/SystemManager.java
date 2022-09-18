@@ -12,8 +12,11 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 시스템 내부에 접근하는 기능을 모아놓은 클래스
@@ -113,4 +116,45 @@ public class SystemManager {
 
         return (String[])answer.toArray();
     }
+
+    /**
+     * 현재 시간 가져오기
+     */
+    public String getCurrentTimeToString(boolean isIncludeSec) {
+        // 테스트
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+
+        SimpleDateFormat sdf;
+
+        if(isIncludeSec) {
+            sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+        } else {
+            sdf = new SimpleDateFormat("yyyy-MM-dd");
+        }
+
+        String getTime = sdf.format(date);
+
+        return getTime;
+    }
+
+    /**
+     * 날짜를 입력받고, 시간이 지났는지 여부를 판단합니다.
+     */
+    public boolean travelDateCheck(String date, String time) {
+        long now = System.currentTimeMillis();
+        Date todayDate = new Date(now);
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+
+        try {
+            Date alarmDate = format.parse(date + " " + time);
+            //Date currentDate = format.parse(getCurrentTimeToString(false));
+
+            return alarmDate.compareTo(todayDate) > 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

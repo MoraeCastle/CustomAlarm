@@ -25,6 +25,7 @@ public class BaseActivity extends AppCompatActivity {
     private SystemManager system;
     private UIManager uiManager;
     private Class<?> moveClass;
+    private String moveClassToastMsg;
     private AlarmDatabase alarmDatabase;
 
     public AlarmDatabase getAlarmDatabase() {
@@ -52,6 +53,9 @@ public class BaseActivity extends AppCompatActivity {
     public void setMoveClass(Class<?> moveClass) {
         this.moveClass = moveClass;
     }
+    public void setMoveClassToastMsg(String msg) {
+        this.moveClassToastMsg = msg;
+    }
 
     @Override
     public void onBackPressed() {
@@ -63,7 +67,7 @@ public class BaseActivity extends AppCompatActivity {
             if(getUiManager().isToastActive()) {
                 finish();
             } else {
-                getUiManager().printToast(null);
+                getUiManager().printToast(moveClassToastMsg);
             }
         }
     }
