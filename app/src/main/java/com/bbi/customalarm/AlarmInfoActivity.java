@@ -193,8 +193,8 @@ public class AlarmInfoActivity extends BaseActivity {
         });
 
 
-        hourPicker.setMaxValue(24);
-        minutePicker.setMaxValue(24);
+        hourPicker.setMaxValue(23);
+        minutePicker.setMaxValue(59);
 
         saveIntent = getIntent();
 
@@ -304,10 +304,15 @@ public class AlarmInfoActivity extends BaseActivity {
             public void onClick(View view) {
                 if (isAllDataEdit()) {
                     try {
-                        // 요일 재정렬.
-                        if(!alarmItem.getType().equals("Date")) {
+                        // 요일과 갱신상태를 재조정한다.
+                        if(alarmItem.getType().equals(Type.DayOfTheWeek)) {
                             alarmItem.setDayOfWeek(AlarmItem.resetDayOfWeek(alarmItem.getDayOfWeek()));
+                            alarmItem.setStringToDate(2000, 01, 01);
                         }
+
+                        // 저장하면 무조건 활성화.
+                        alarmItem.setActive(true);
+
                         if(isEditMode) {
                             new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItem);
                         } else {
@@ -467,9 +472,14 @@ public class AlarmInfoActivity extends BaseActivity {
     // 모두 입력 체크
     // 진동, 반복 여부는 X.
     private boolean isAllDataEdit() {
-        if(!alarmItem.getType().equals("Date")) {
+        if(alarmItem.getType().equals(Type.DayOfTheWeek)) {
             if(alarmItem.getDayOfWeek().size() == 1 && alarmItem.getDayOfWeek().contains("")) {
                 getUiManager().printToast("요일을 하나 이상 선택해주세요.");
+                return false;
+            }
+        } else {
+            if(getSystem().isDatePass(alarmItem.getDate(), alarmItem.getTime())) {
+                getUiManager().printToast("이미 지난 시간은 선택할 수 없습니다.");
                 return false;
             }
         }

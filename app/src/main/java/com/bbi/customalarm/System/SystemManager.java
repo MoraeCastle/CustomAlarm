@@ -12,8 +12,11 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bbi.customalarm.Object.AlarmItem;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -139,22 +142,104 @@ public class SystemManager {
     }
 
     /**
-     * 날짜를 입력받고, 시간이 지났는지 여부를 판단합니다.
+     * 날짜를 입력받고, 현재 시간인지 여부를 판단합니다.
      */
-    public boolean travelDateCheck(String date, String time) {
+    public boolean alarmDateCheck(String date, String time) {
         long now = System.currentTimeMillis();
         Date todayDate = new Date(now);
+        todayDate.setSeconds(0);
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
         try {
             Date alarmDate = format.parse(date + " " + time);
-            //Date currentDate = format.parse(getCurrentTimeToString(false));
 
-            return alarmDate.compareTo(todayDate) > 0;
+            return format.format(alarmDate).equals(format.format(todayDate));
         } catch (Exception e) {
             return false;
         }
     }
 
+    /**
+     * 요일로 알람시간을 체크합니다.
+     */
+    public boolean alarmDateCheckToWeek(String week, String date, String time) {
+        // 시간 먼저 체크.
+        long now = System.currentTimeMillis();
+        Date todayDate = new Date(now);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+
+        try {
+            Date alarmDate = format.parse(date + " " + time);
+
+            String[] todayArray = format.format(todayDate).split(" ");
+            String[] alarmArray = format.format(alarmDate).split(" ");
+
+            // 년,월,일이 같으면 알람이 갱신된 것이므로 false.
+            if(todayArray[0].equals(alarmArray[0])) {
+                Log.d("Timer", "날짜가 같습니다. false");
+                return false;
+            }
+
+            // 이제 시간을 비교.
+            if(todayArray[1].equals(alarmArray[1])) {
+                Log.d("Timer", "날짜가 다르나 시간은 같습니다.");
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(todayDate);
+
+                int todayWeek = cal.get(Calendar.DAY_OF_WEEK);
+
+                // 겹치는 요일을 확인.
+                String data = week.replaceAll("\\[|\\]", "");
+                for (String weekString : data.replaceAll(" ", "").split(",")) {
+                    if(weekString.equals(AlarmItem.convertDayOfWeek(todayWeek - 1))) {
+                        Log.d("Timer", "요일입니다.");
+                        return true;
+                    }
+                }
+            }
+
+            Log.d("Timer", "날짜와 시간 모두 다릅니다. false");
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 해당 알람시간이 지났는지?
+     */
+    public boolean isDatePass(String date, String time) {
+        long now = System.currentTimeMillis();
+        Date todayDate = new Date(now);
+        todayDate.setSeconds(0);
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+
+        try {
+            Date alarmDate = format.parse(date + " " + time);
+
+            return todayDate.compareTo(alarmDate) == 1;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // 해당 일만큼 날짜를 더해서 문자열로 반환합니다.
+    public String addAlarmDate(String date , int day) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            Date alarmDate = format.parse(date);
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(alarmDate);
+
+            cal.add(Calendar.DAY_OF_MONTH, day);
+
+            return format.format(cal.getTime());
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }

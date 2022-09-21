@@ -117,6 +117,8 @@ public class AlarmPrintActivity extends BaseActivity {
                 mediaManager.releaseRingtone();
                 vibratorManager.cancel();
 
+                Intent intent = new Intent(Type.FinishAlarm);
+                sendBroadcast(intent);
                 finish();
             }
         });
