@@ -123,14 +123,14 @@ public class SystemManager {
     /**
      * 현재 시간 가져오기
      */
-    public String getCurrentTimeToString(boolean isIncludeSec) {
+    public String getCurrentTimeToString(boolean isIncludeTime) {
         // 테스트
         long now = System.currentTimeMillis();
         Date date = new Date(now);
 
         SimpleDateFormat sdf;
 
-        if(isIncludeSec) {
+        if(isIncludeTime) {
             sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm");
         } else {
             sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -155,6 +155,19 @@ public class SystemManager {
             Date alarmDate = format.parse(date + " " + time);
 
             return format.format(alarmDate).equals(format.format(todayDate));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public boolean alarmDateCheck(Date date) {
+        long now = System.currentTimeMillis();
+        Date todayDate = new Date(now);
+        todayDate.setSeconds(0);
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+
+        try {
+            return format.format(date).equals(format.format(todayDate));
         } catch (Exception e) {
             return false;
         }
@@ -241,5 +254,43 @@ public class SystemManager {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    // 해당 일만큼 시간를 더해서 문자열로 반환합니다.
+    public String addAlarmMinute(String date , int minute) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+
+        try {
+            Date alarmDate = format.parse(date);
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(alarmDate);
+
+            cal.add(Calendar.MINUTE, minute);
+
+            return format.format(cal.getTime());
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    /**
+     *  해당 문자열대로 날짜를 재조정합니다.
+     */
+    public Date setReCallDate(String date) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+
+        try {
+            return format.parse(date);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    /**
+     * xxxx-xx-xx xx:xx 의 날짜를 문자열로 반환합니다
+     */
+    private String dateToString(Date date) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+        return format.format(date);
     }
 }

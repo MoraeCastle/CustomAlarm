@@ -113,7 +113,7 @@ public class AlarmInfoActivity extends BaseActivity {
         choseDayOfWeek = findViewById(R.id.alarmInfo_choseDayOfWeek);
         choseDayOfWeekRow = findViewById(R.id.alarmInfo_choseDayOfWeekRow);
 
-        dayOff = getResources().getDrawable(R.drawable.day_btn_off);
+        dayOff = getDrawable(R.drawable.day_btn_off);
         weekBtnListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -312,6 +312,7 @@ public class AlarmInfoActivity extends BaseActivity {
 
                         // 저장하면 무조건 활성화.
                         alarmItem.setActive(true);
+                        alarmItem.setReCallDate("");
 
                         if(isEditMode) {
                             new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItem);

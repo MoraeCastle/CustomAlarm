@@ -2,8 +2,11 @@ package com.bbi.customalarm;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -44,7 +47,7 @@ import java.util.List;
 public class AlarmPrintActivity extends BaseActivity {
     private final String TAG = "AlarmInfoActivity";
 
-    private LinearLayout contentLayout;
+    private LinearLayout contentLayout, closeLayout;
     private TextView dateTxt, timeTxt, contentTxt;
     private SlideToActView slideBar;
 
@@ -52,6 +55,7 @@ public class AlarmPrintActivity extends BaseActivity {
     private MediaManager mediaManager;
 
     private boolean isDataOk;
+    private boolean isRepeat;
     /**
      * 데이터 규칙
      * 0 : 날짜
@@ -59,6 +63,7 @@ public class AlarmPrintActivity extends BaseActivity {
      * 2 : 이름
      * 3 : 알람음
      * 4 : 진동유형
+     * 5 : 반복
      */
     private List<String> alarmData;
 
@@ -82,6 +87,7 @@ public class AlarmPrintActivity extends BaseActivity {
         contentLayout = findViewById(R.id.alarmPrint_contentLayout);
         contentTxt = findViewById(R.id.alarmPrint_content);
         slideBar = findViewById(R.id.alarmPrint_seekbar);
+        closeLayout = findViewById(R.id.alarmPrint_closeAlarmBtn);
 
         if(alarmData.size() != 0) {
             dateTxt.setText(alarmData.get(0));
@@ -90,6 +96,15 @@ public class AlarmPrintActivity extends BaseActivity {
                 contentLayout.setVisibility(View.VISIBLE);
                 contentTxt.setText(alarmData.get(2));
             }
+
+            // 반복 여부.
+            if(!alarmData.get(5).equals("0")) {
+                slideBar.setText(alarmData.get(5) + "분 뒤에 다시 울림");
+                closeLayout.setVisibility(View.VISIBLE);
+
+                isRepeat = true;
+            }
+
             isDataOk = true;
         } else {
             finish();
@@ -104,6 +119,17 @@ public class AlarmPrintActivity extends BaseActivity {
                 vibratorManager.vibrate(0);
             }
         }
+
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context arg0, Intent intent) {
+                String action = intent.getAction();
+
+                if (action.equals(Type.RefreshTime)) {
+                    timeTxt.setText(getSystem().getCurrentTimeToString(true).split(" ")[1]);
+                }
+            }
+        }, new IntentFilter(Type.RefreshTime));
     }
 
     @Override
@@ -111,9 +137,28 @@ public class AlarmPrintActivity extends BaseActivity {
         super.onStart();
 
         // 완료 여부.
+        // 종료 및 다시울림이 될 수 있다.
         slideBar.setOnSlideCompleteListener(new SlideToActView.OnSlideCompleteListener() {
             @Override
             public void onSlideComplete(SlideToActView slideToActView) {
+                mediaManager.releaseRingtone();
+                vibratorManager.cancel();
+
+                Intent intent;
+                if(isRepeat) {
+                    intent = new Intent(Type.ReCallAlarm);
+                } else {
+                    intent = new Intent(Type.FinishAlarm);
+                }
+                sendBroadcast(intent);
+                finish();
+            }
+        });
+
+        // 아예 끄기.
+        closeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 mediaManager.releaseRingtone();
                 vibratorManager.cancel();
 

@@ -27,4 +27,6 @@ public class Type {
     public static String AlarmId = "AlarmId";
     public static String AlarmData = "alarmDataList";
     public static String FinishAlarm = "alarmFinished";
+    public static String ReCallAlarm = "reCallAlarm";
+    public static String RefreshTime = "refreshTime";
 }

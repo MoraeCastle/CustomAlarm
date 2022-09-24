@@ -62,6 +62,9 @@ public class AlarmListActivity extends BaseActivity {
     private boolean isActiveAlarm = false;
     private BroadcastReceiver broadcastReceiver;
 
+    // 다시 울리는 시간.
+    private AlarmItem targetAlarm = null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +119,7 @@ public class AlarmListActivity extends BaseActivity {
                     Log.d(TAG, "- Uri : " + item.getRingUri());
                     Log.d(TAG, "- VibrateType : " + item.getVibrationType());
                     Log.d(TAG, "- Repeat : " + item.getRepeat());
+                    Log.d(TAG, "- ReCallDate : " + item.getReCallDate());
                     Log.d(TAG, "- Active : " + item.isActive());
                 }
                 alarmListAdapter.notifyDataSetChanged();
@@ -131,6 +135,8 @@ public class AlarmListActivity extends BaseActivity {
                     checkAlarmTime();
                 } else {
                     Log.d(TAG, "알람이 울리고 있습니다.");
+                    Intent intent = new Intent(Type.RefreshTime);
+                    sendBroadcast(intent);
                 }
             }
         }, 0, 3000);
@@ -140,13 +146,30 @@ public class AlarmListActivity extends BaseActivity {
             @Override
             public void onReceive(Context arg0, Intent intent) {
                 String action = intent.getAction();
+
                 if (action.equals(Type.FinishAlarm)) {
-                    isActiveAlarm = false;
                     Log.d(TAG, "알람이 꺼졌습니다...");
+
+                    if(targetAlarm != null) {
+                        targetAlarm.setReCallDate("");
+                        setDisableAlarmItem(targetAlarm);
+                        targetAlarm = null;
+                    }
+                } else if (action.equals(Type.ReCallAlarm)) {
+                    Log.d(TAG, "다시 울립니다.");
+                    getUiManager().printToast(targetAlarm.getRepeat() + "분 후에 다시 울립니다.");
+
+                    String[] currentTime = getSystem().getCurrentTimeToString(true).split(" ");
+                    String reCallString = getSystem().addAlarmMinute(
+                            currentTime[0] + " " + currentTime[1], targetAlarm.getRepeat());
+                    targetAlarm.setReCallDate(reCallString);
                 }
+
+                isActiveAlarm = false;
             }
         };
         registerReceiver(broadcastReceiver, new IntentFilter(Type.FinishAlarm));
+        registerReceiver(broadcastReceiver, new IntentFilter(Type.ReCallAlarm));
     }
 
     @Override
@@ -251,73 +274,108 @@ public class AlarmListActivity extends BaseActivity {
 
     /**
      * 울려야 할 알람을 확인하고, 울립니다.
-     * 울리는 우선순위는 날짜 > 요일 입니다.
+     * 울리는 알람타입 우선순위는 날짜 > 요일 입니다.
+     * 시간이 겹치는 경우 우선순위는 기존 > 나중에 울릴알람 입니다.
      */
     private void checkAlarmTime() {
         if(alarmItemList.size() != 0) {
-            Log.d("Timer", "알람을 조회합니다.");
             List<AlarmItem> itemList = new ArrayList<>();
 
+            // 현재시간과 알람시간이 같은 알람만 저장.
             for (AlarmItem dataItem : alarmItemList) {
                 // 활성화 된 알람만.
                 if(dataItem.isActive()) {
-                    if(dataItem.getType().equals(Type.DayOfTheWeek)) {
-                        Log.d("Timer", "현재 요일입니다.");
-                        if(getSystem().alarmDateCheckToWeek(dataItem.getDayOfWeek().toString(), dataItem.getDate(), dataItem.getTime())) {
+                    // 다시 울려야 할 알람인지?
+                    if(!dataItem.getReCallDate().equals("")) {
+                        if(getSystem().alarmDateCheck(getSystem().setReCallDate(dataItem.getReCallDate()))) {
                             itemList.add(dataItem);
                         }
                     } else {
-                        if(getSystem().alarmDateCheck(dataItem.getDate(), dataItem.getTime())) {
-                            Log.d("Timer", "현재 시간입니다.");
-
-                            if(itemList.size() > 1) {
-                                // 같은 시간에 요일알람이 있다면, 날짜가 우선.
-                                if(itemList.get(0).getType().equals(Type.DayOfTheWeek)) {
-                                    itemList.add(0, dataItem);
-                                } else {
-                                    itemList.add(dataItem);
-                                }
-                            } else {
+                        // 요일인지 날짜인지?
+                        // 삽입 우선순위는 날짜이다.
+                        // 날짜알람은 무조건 앞에 쌓인다.
+                        if(dataItem.getType().equals(Type.DayOfTheWeek)) {
+                            if(getSystem().alarmDateCheckToWeek(
+                                    dataItem.getDayOfWeek().toString(), dataItem.getDate(), dataItem.getTime())) {
                                 itemList.add(dataItem);
+                            }
+                        } else {
+                            if(getSystem().alarmDateCheck(dataItem.getDate(), dataItem.getTime())) {
+                                itemList.add(0, dataItem);
                             }
                         }
                     }
                 }
             }
 
-            // 알람은 전부 false 처리합니다.
+            // 울릴 알람이 있는지?
             if(itemList.size() > 0) {
-                for (AlarmItem item : itemList) {
-                    // 알람을 비활성시키고 내일로 미룹니다.
-                    // 요일의 경우 울린날짜를 저장합니다.(갱신여부)
-                    if(item.getType().equals(Type.DayOfTheWeek)) {
-                        item.setDate(getSystem().getCurrentTimeToString(false));
-                        new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(item);
+                targetAlarm = itemList.get(0);
+                String printDate, printTime;
+                if(targetAlarm.getReCallDate().equals("")) {
+                    if(targetAlarm.getType().equals(Type.DayOfTheWeek)) {
+                        printDate = getSystem().getCurrentTimeToString(false);
                     } else {
-                        item.setActive(false);
-                        //item.setDate(getSystem().addAlarmDate(item.getDate(), 1));
-                        new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(item);
+                        printDate = targetAlarm.getDate();
                     }
+                    printTime = targetAlarm.getTime();
+                } else {
+                    printDate = targetAlarm.getReCallDate().split(" ")[0];
+                    printTime = targetAlarm.getReCallDate().split(" ")[1];
                 }
+
+                String[] data = new String[]{
+                        printDate,
+                        printTime,
+                        targetAlarm.getName(),
+                        targetAlarm.getRingUri().toString(),
+                        targetAlarm.getVibrationType(),
+                        String.valueOf(targetAlarm.getRepeat())
+                };
 
                 // 첫 번째 알람을 울립니다.
                 Intent intent = new Intent(getApplicationContext(), AlarmPrintActivity.class);
-
-                String[] data = new String[]{
-                        itemList.get(0).getDate(),
-                        itemList.get(0).getTime(),
-                        itemList.get(0).getName(),
-                        itemList.get(0).getRingUri().toString(),
-                        itemList.get(0).getVibrationType()
-                };
-
                 intent.putExtra(Type.AlarmData, data);
                 startActivity(intent);
 
                 isActiveAlarm = true;
+
+                // 첫 번째 알람 이외는 비활성 처리합니다.
+                // 나중에 상단에 부재중 알람을 표시해야 합니다.
+                for (AlarmItem item : itemList) {
+                    if(itemList.indexOf(item) != 0) {
+                        setDisableAlarmItem(item);
+                    }
+                }
+            } else {
+                Log.d(TAG, "타이머: 울릴 알람이 없습니다.");
             }
-        } else {
-            Log.d("Timer", "검사할 알람이 없습니다.");
         }
+    }
+
+    /**
+     * 알람 아이템의 상태를 비활성화 시킵니다.
+     * 요일알람의 경우 갱신상태를 최신화 시킵니다.
+     */
+    private void setDisableAlarmItem(AlarmItem item) {
+        for (AlarmItem data : alarmItemList) {
+            if(item.getId() == data.getId()) {
+                data.setReCallDate("");
+
+                // 요일의 경우 울린날짜를 저장합니다.(갱신여부)
+                if(data.getType().equals(Type.DayOfTheWeek)) {
+                    data.setDate(getSystem().getCurrentTimeToString(false));
+                    new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(data);
+                } else {
+                    // 날짜알람인 경우 그냥 비활성화 시킵니다.(활성화 시 날짜체크함)
+                    data.setActive(false);
+                    new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(data);
+                }
+
+                return;
+            }
+        }
+
+        Log.d(TAG, "알람 비활성화: 활성화 될 아이템 찾지 못함.");
     }
 }

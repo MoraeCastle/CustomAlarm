@@ -39,6 +39,8 @@ public class AlarmItem {
     private String vibrationType;
     @ColumnInfo(name = "repeat")
     private int repeat;
+    @ColumnInfo(name = "reCallDate")
+    private String reCallDate;
     @ColumnInfo(name = "IsActive")
     private boolean isActive;
 
@@ -48,6 +50,7 @@ public class AlarmItem {
         name = "";
         vibrationType = "";
         repeat = 0;
+        reCallDate = "";
         time = "00:00";
         isActive = false;
 
@@ -124,6 +127,13 @@ public class AlarmItem {
     }
     public void setRepeat(int repeat) {
         this.repeat = repeat;
+    }
+
+    public String getReCallDate() {
+        return reCallDate;
+    }
+    public void setReCallDate(String reCallDate) {
+        this.reCallDate = reCallDate;
     }
 
     // 시간 변환
