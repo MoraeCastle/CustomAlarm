@@ -1,27 +1,24 @@
 package com.bbi.customalarm;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.CombinedVibration;
 import android.os.Handler;
-import android.os.Message;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
-import android.os.VibratorManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,11 +28,7 @@ import com.bbi.customalarm.Object.AlarmItem;
 import com.bbi.customalarm.System.BaseActivity;
 import com.bbi.customalarm.System.Type;
 import com.bbi.customalarm.System.VerticalSpaceItemDecoration;
-import com.bbi.customalarm.System.VibrationManager;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -66,9 +59,23 @@ public class AlarmListActivity extends BaseActivity {
     private AlarmItem targetAlarm = null;
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "AlarmListActivity : onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "AlarmListActivity : onDestroy");
+        //timerCall.cancel();
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_list);
+        Log.d(TAG, "AlarmListActivity : onCreate");
 
         settingBtn = findViewById(R.id.alarmList_settingBtn);
         alarmCount = findViewById(R.id.alarmList_alarmCount);
@@ -109,7 +116,7 @@ public class AlarmListActivity extends BaseActivity {
                 for (AlarmItem item : alarmItems) {
                     alarmItemList.add(item);
 
-                    Log.d(TAG, "[" + alarmItems.indexOf(item) + "] 번째 아이템");
+                    /*Log.d(TAG, "[" + alarmItems.indexOf(item) + "] 번째 아이템");
                     Log.d(TAG, "- ID : " + item.getId());
                     Log.d(TAG, "- Date : " + item.getDate());
                     Log.d(TAG, "- Time2 : " + item.getTime());
@@ -120,7 +127,7 @@ public class AlarmListActivity extends BaseActivity {
                     Log.d(TAG, "- VibrateType : " + item.getVibrationType());
                     Log.d(TAG, "- Repeat : " + item.getRepeat());
                     Log.d(TAG, "- ReCallDate : " + item.getReCallDate());
-                    Log.d(TAG, "- Active : " + item.isActive());
+                    Log.d(TAG, "- Active : " + item.isActive());*/
                 }
                 alarmListAdapter.notifyDataSetChanged();
             }
@@ -132,6 +139,8 @@ public class AlarmListActivity extends BaseActivity {
             public void run() {
                 // 알람이 울리지 않을 떄만.
                 if(!isActiveAlarm) {
+                    Log.d(TAG, "알람 탐색...");
+
                     checkAlarmTime();
                 } else {
                     Log.d(TAG, "알람이 울리고 있습니다.");
@@ -155,6 +164,8 @@ public class AlarmListActivity extends BaseActivity {
                         setDisableAlarmItem(targetAlarm);
                         targetAlarm = null;
                     }
+
+                    isActiveAlarm = false;
                 } else if (action.equals(Type.ReCallAlarm)) {
                     Log.d(TAG, "다시 울립니다.");
                     getUiManager().printToast(targetAlarm.getRepeat() + "분 후에 다시 울립니다.");
@@ -163,9 +174,19 @@ public class AlarmListActivity extends BaseActivity {
                     String reCallString = getSystem().addAlarmMinute(
                             currentTime[0] + " " + currentTime[1], targetAlarm.getRepeat());
                     targetAlarm.setReCallDate(reCallString);
-                }
 
-                isActiveAlarm = false;
+                    isActiveAlarm = false;
+                }/* else if(action.equals(Type.CheckAlarm)) {
+                    Log.d(TAG, "알람 체크....0");
+
+                    if(!isActiveAlarm) {
+                        checkAlarmTime();
+                    } else {
+                        Log.d(TAG, "알람이 울리고 있습니다.");
+                        Intent broadCast = new Intent(Type.RefreshTime);
+                        sendBroadcast(broadCast);
+                    }
+                }*/
             }
         };
         registerReceiver(broadcastReceiver, new IntentFilter(Type.FinishAlarm));
@@ -175,6 +196,8 @@ public class AlarmListActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG, "AlarmListActivity : onStart");
+        checkDrawOverlays();
 
         // 설정
         settingBtn.setOnClickListener(new View.OnClickListener() {
@@ -310,6 +333,15 @@ public class AlarmListActivity extends BaseActivity {
 
             // 울릴 알람이 있는지?
             if(itemList.size() > 0) {
+                // 현재 앱이 꺼져있으면 다시 깨웁니다.
+                /*if(!getSystem().isAppActive()) {
+                    Intent intent = new Intent("android.intent.category.LAUNCHER");
+                    intent.setClassName("com.bbi.customalarm", "com.bbi.customalarm.AlarmListActivity");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                }*/
+
                 targetAlarm = itemList.get(0);
                 String printDate, printTime;
                 if(targetAlarm.getReCallDate().equals("")) {
@@ -378,4 +410,32 @@ public class AlarmListActivity extends BaseActivity {
 
         Log.d(TAG, "알람 비활성화: 활성화 될 아이템 찾지 못함.");
     }
+
+    /**
+     * 다른 앱 위에 표시하기를 체크합니다.
+     */
+    private void checkDrawOverlays() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Log.d(TAG, "다른 앱 위에 그리기.");
+                getUiManager().showDialog(this, "안내", "앱이 꺼져있어도 알람이 울리려면 다른 앱 위에 표시하는 권한을 체크해야 합니다.",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                getUiManager().printToast("앱이 종료되면 알림이 울리지 않습니다.");
+                            }
+                        }, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Log.d(TAG, "2");
+                                Intent appDetail = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                                appDetail.addCategory(Intent.CATEGORY_DEFAULT);
+                                appDetail.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(appDetail);
+                            }
+                        }, "거절", "이동", false);
+            }
+        }
+    }
+
 }

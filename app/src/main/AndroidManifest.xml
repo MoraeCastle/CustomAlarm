@@ -1,33 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bbi.customalarm">
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:name=".System.App"
         android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_logo_round"
-        android:supportsRtl="true"
         android:screenOrientation="portrait"
-        android:hardwareAccelerated="true"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".IntroActivity">
+        <service
+            android:name=".Service.AlarmService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PermissionActivity"/>
-        <activity android:name=".AlarmListActivity"/>
-        <activity android:name=".AlarmInfoActivity"/>
-        <activity android:name=".AlarmPrintActivity"/>
-        <activity android:name=".SettingActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".PermissionActivity" />
+        <activity
+            android:launchMode="singleTop"
+            android:persistableMode="persistNever"
+            android:autoRemoveFromRecents="true"
+            android:name=".AlarmListActivity" >
+            <!--<intent-filter>
+                <action android:name="intent.my.action" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>-->
+        </activity>
+        <activity android:name=".AlarmInfoActivity" />
+        <activity android:name=".AlarmPrintActivity" />
+        <activity android:name=".SettingActivity" />
+        <activity android:name=".MainActivity" />
     </application>
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

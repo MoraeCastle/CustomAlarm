@@ -1,7 +1,9 @@
 package com.bbi.customalarm;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -143,6 +145,13 @@ public class AlarmPrintActivity extends BaseActivity {
             public void onSlideComplete(SlideToActView slideToActView) {
                 mediaManager.releaseRingtone();
                 vibratorManager.cancel();
+
+                if(!getSystem().checkActivity(AlarmPrintActivity.this, "AlarmListActivity")) {
+                    Intent intent = new Intent("android.intent.category.LAUNCHER");
+                    intent.setClassName("com.bbi.customalarm", "com.bbi.customalarm.AlarmListActivity");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
 
                 Intent intent;
                 if(isRepeat) {

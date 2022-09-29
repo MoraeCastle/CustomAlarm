@@ -2,7 +2,9 @@ package com.bbi.customalarm.System;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.util.Log;
@@ -78,6 +80,25 @@ public class UIManager {
                 toastActive = false;
             }
         }, 1500);
+    }
+
+    /**
+     * 다이얼로그 출력.
+     */
+    public void showDialog(
+            Context context,
+            String title,
+            String message,
+            DialogInterface.OnClickListener yesListener,
+            DialogInterface.OnClickListener noListener, String leftTxt, String rightTxt, boolean cancel) {
+        AlertDialog.Builder msg = new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(leftTxt, yesListener)
+                .setNegativeButton(rightTxt, noListener);
+        AlertDialog msgDlg = msg.create();
+        msgDlg.setCancelable(cancel);
+        msgDlg.show();
     }
     
     public static String getDayOfWeek(int num) {

@@ -29,4 +29,8 @@ public class Type {
     public static String FinishAlarm = "alarmFinished";
     public static String ReCallAlarm = "reCallAlarm";
     public static String RefreshTime = "refreshTime";
+    public static String CheckAlarm = "checkAlarm";
+
+    // Service
+    public static final String AlarmService = "alarmService";
 }

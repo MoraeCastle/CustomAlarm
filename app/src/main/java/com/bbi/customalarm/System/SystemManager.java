@@ -2,6 +2,7 @@ package com.bbi.customalarm.System;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,8 @@ import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.bbi.customalarm.Object.AlarmItem;
 
@@ -292,5 +295,39 @@ public class SystemManager {
     private String dateToString(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
         return format.format(date);
+    }
+
+    /**
+     * 포/백그라운드 판별.
+     */
+    public boolean isAppActive() {
+        if(ProcessLifecycleOwner.get().getLifecycle().getCurrentState() == Lifecycle.State.CREATED) {
+            return false;
+        } else if(ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 액티비티가 현재 열려있는지 확인합니다.
+     */
+    public boolean checkActivity(Context context, String activityName) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(Integer.MAX_VALUE);
+
+        for (ActivityManager.RunningTaskInfo task : tasks) {
+            Log.d("System", task.baseActivity.getClassName());
+            /*if (context.getPackageName().equalsIgnoreCase(task.baseActivity.getPackageName())) {
+                Log.d(activityName, "YES!!!");
+            }*/
+
+            if(task.baseActivity.getClassName().equals("com.bbi.customalarm." + activityName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
