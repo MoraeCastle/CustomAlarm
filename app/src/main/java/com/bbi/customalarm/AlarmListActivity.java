@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bbi.customalarm.Adapter.AlarmListAdapter;
 import com.bbi.customalarm.Object.AlarmItem;
+import com.bbi.customalarm.Room.AlarmDao;
 import com.bbi.customalarm.System.BaseActivity;
 import com.bbi.customalarm.System.Type;
 import com.bbi.customalarm.System.VerticalSpaceItemDecoration;
@@ -175,6 +176,7 @@ public class AlarmListActivity extends BaseActivity {
                             currentTime[0] + " " + currentTime[1], targetAlarm.getRepeat());
                     targetAlarm.setReCallDate(reCallString);
 
+                    setAlarmData(targetAlarm);
                     isActiveAlarm = false;
                 }/* else if(action.equals(Type.CheckAlarm)) {
                     Log.d(TAG, "알람 체크....0");
@@ -409,6 +411,19 @@ public class AlarmListActivity extends BaseActivity {
         }
 
         Log.d(TAG, "알람 비활성화: 활성화 될 아이템 찾지 못함.");
+    }
+
+    /**
+     * 알람아이템을 업데이트합니다.
+     * 유효한 아이템이여야 실행됩니다.
+     */
+    private void setAlarmData(AlarmItem item) {
+        for (AlarmItem data : alarmItemList) {
+            if(item.getId() == data.getId()) {
+                new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(item);
+                return;
+            }
+        }
     }
 
     /**

@@ -3,6 +3,7 @@ package com.bbi.customalarm;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,11 +15,15 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -132,6 +137,37 @@ public class AlarmPrintActivity extends BaseActivity {
                 }
             }
         }, new IntentFilter(Type.RefreshTime));
+
+        // 화면 깨우기.
+        if(getSystemService(POWER_SERVICE) != null) {
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+            PowerManager.WakeLock  wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK |
+                    PowerManager.ACQUIRE_CAUSES_WAKEUP |
+                    PowerManager.ON_AFTER_RELEASE, "appname::WakeLock");
+
+            //acquire will turn on the display
+            wakeLock.acquire();
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            Log.d(TAG, "onCreate: set window flags for API level > 27");
+
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
+                    | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            KeyguardManager keyguardManager = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
+            keyguardManager.requestDismissKeyguard(this, null);
+            setShowWhenLocked(true);
+            setTurnScreenOn(true);
+        } else {
+            Log.d(TAG, "onCreate: onCreate:set window flags for API level < 27");
+
+            getWindow().addFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+                            | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                            | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                            | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                            | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        }
     }
 
     @Override
@@ -146,7 +182,7 @@ public class AlarmPrintActivity extends BaseActivity {
                 mediaManager.releaseRingtone();
                 vibratorManager.cancel();
 
-                if(!getSystem().checkActivity(AlarmPrintActivity.this, "AlarmListActivity")) {
+                if(!getSystem().checkActivity(getApplicationContext(), "AlarmListActivity")) {
                     Intent intent = new Intent("android.intent.category.LAUNCHER");
                     intent.setClassName("com.bbi.customalarm", "com.bbi.customalarm.AlarmListActivity");
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -171,6 +207,13 @@ public class AlarmPrintActivity extends BaseActivity {
                 mediaManager.releaseRingtone();
                 vibratorManager.cancel();
 
+                if(!getSystem().checkActivity(getApplicationContext(), "AlarmListActivity")) {
+                    Intent intent = new Intent("android.intent.category.LAUNCHER");
+                    intent.setClassName("com.bbi.customalarm", "com.bbi.customalarm.AlarmListActivity");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+                
                 Intent intent = new Intent(Type.FinishAlarm);
                 sendBroadcast(intent);
                 finish();

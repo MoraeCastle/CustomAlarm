@@ -64,8 +64,8 @@ public class AlarmService extends Service {
     private void startForeground() {
         Intent notificationIntent = new Intent();
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
+        /*PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                notificationIntent, 0);*/
 
         startForeground(1, new NotificationCompat.Builder(this,
                 Type.AlarmService) // don't forget create a notification channel first

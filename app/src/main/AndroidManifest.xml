@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bbi.customalarm">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -40,7 +42,9 @@
             </intent-filter>-->
         </activity>
         <activity android:name=".AlarmInfoActivity" />
-        <activity android:name=".AlarmPrintActivity" />
+        <activity
+            android:showOnLockScreen="true"
+            android:name=".AlarmPrintActivity" />
         <activity android:name=".SettingActivity" />
         <activity android:name=".MainActivity" />
     </application>
