@@ -44,9 +44,9 @@ public class SettingActivity extends BaseActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("plain/text");
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[] { "reallyrord@gmail.com" });
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[] { "customalarmqna@gmail.com" });
                 intent.putExtra(Intent.EXTRA_SUBJECT, "내맘대로알람 문의");
-                intent.putExtra(Intent.EXTRA_TEXT, "내용 입력...");
+                intent.putExtra(Intent.EXTRA_TEXT, "");
                 startActivity(Intent.createChooser(intent, ""));
             }
         });
