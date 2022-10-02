@@ -100,6 +100,22 @@ public class UIManager {
         msgDlg.setCancelable(cancel);
         msgDlg.show();
     }
+
+    /**
+     * 공지사항용 취소가 불가능한 안내.
+     */
+    public void showDialogToNotice(
+            Context context,
+            String message,
+            DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder msg = new AlertDialog.Builder(context)
+                .setTitle("안내")
+                .setMessage(message)
+                .setPositiveButton("확인", listener);
+        AlertDialog msgDlg = msg.create();
+        msgDlg.setCancelable(false);
+        msgDlg.show();
+    }
     
     public static String getDayOfWeek(int num) {
         switch (num) {

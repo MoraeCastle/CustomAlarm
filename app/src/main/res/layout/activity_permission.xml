@@ -3,51 +3,71 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_permission"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/appColor"
     tools:context=".MainActivity">
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.255" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:elevation="10dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/permission_view_back"
-        app:layout_constraintWidth_percent="0.676"
-        app:layout_constraintHeight_percent="0.49"
-        app:layout_constraintTop_toTopOf="@+id/guideline1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintWidth_percent="0.807"
+        app:layout_constraintHeight_percent="0.585"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.147" />
+            app:layout_constraintGuide_percent="0.078" />
          <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.227" />
+            app:layout_constraintGuide_percent="0.157" />
          <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.39" />
+            app:layout_constraintGuide_percent="0.351" />
          <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.566" />
+            app:layout_constraintGuide_percent="0.599" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.30" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.548" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.093" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.914" />
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -55,7 +75,7 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:maxLines="1"
-            android:text="필수권한 설정"
+            android:text="권한 동의"
             android:textColor="@color/black"
             app:autoSizeMaxTextSize="40dp"
             app:autoSizeMinTextSize="1dp"
@@ -64,7 +84,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.05"
-            app:layout_constraintWidth_percent="0.405" />
+            app:layout_constraintWidth_percent="0.275" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -72,7 +92,7 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:maxLines="2"
-            android:text="이 앱을 사용하려면 필수적인 권한에 동의해야 합니다"
+            android:text="앱의 기능을 이용하기 위해\n아래와 같은 권한을 묻습니다"
             android:lineHeight="17dp"
             android:textColor="@color/black"
             app:autoSizeMaxTextSize="40dp"
@@ -81,8 +101,62 @@
             app:layout_constraintTop_toTopOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.065"
-            app:layout_constraintWidth_percent="0.597" />
+            app:layout_constraintHeight_percent="0.064"
+            app:layout_constraintWidth_percent="0.482" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fontFamily="@font/jalnan"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="2"
+            android:text="필수권한"
+            android:lineHeight="17dp"
+            android:textColor="@color/black"
+            app:autoSizeMaxTextSize="40dp"
+            app:autoSizeMinTextSize="1dp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintTop_toTopOf="@+id/guideline12"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline14"
+            app:layout_constraintHeight_percent="0.028"
+            app:layout_constraintWidth_percent="0.148" />
+        <TextView
+            android:id="@+id/permission_choicePerTxt"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fontFamily="@font/jalnan"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="2"
+            android:text="선택권한"
+            android:lineHeight="17dp"
+            android:textColor="@color/black"
+            app:autoSizeMaxTextSize="40dp"
+            app:autoSizeMinTextSize="1dp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintTop_toTopOf="@+id/guideline13"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline14"
+            app:layout_constraintHeight_percent="0.028"
+            app:layout_constraintWidth_percent="0.148" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fontFamily="@font/jalnan"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="2"
+            android:text="동의하지 않아도 앱 이용이 가능합니다"
+            android:lineHeight="17dp"
+            android:textColor="@color/black"
+            app:autoSizeMaxTextSize="40dp"
+            app:autoSizeMinTextSize="1dp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintTop_toTopOf="@+id/permission_choicePerTxt"
+            app:layout_constraintBottom_toBottomOf="@+id/permission_choicePerTxt"
+            app:layout_constraintRight_toLeftOf="@+id/guideline15"
+            app:layout_constraintHeight_percent="0.02"
+            app:layout_constraintWidth_percent="0.452" />
 
         <!--권한1-->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -106,17 +180,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.255" />
+                app:layout_constraintGuide_percent="0.317" />
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.538" />
+                app:layout_constraintGuide_percent="0.597" />
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:elevation="5dp"
+                android:elevation="1dp"
                 android:background="@drawable/permission_circle_back"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintHeight_percent="0.796"
@@ -126,9 +200,9 @@
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:background="@drawable/phone_android_black"
+                    android:background="@drawable/folder_open_black"
                     app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintWidth_percent="0.627"
+                    app:layout_constraintWidth_percent="0.508"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -140,7 +214,7 @@
                 android:fontFamily="@font/jalnan"
                 android:includeFontPadding="false"
                 android:maxLines="1"
-                android:text="백그라운드"
+                android:text="저장"
                 android:lineHeight="17dp"
                 android:textColor="@color/black"
                 app:autoSizeMaxTextSize="40dp"
@@ -149,8 +223,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline7"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHeight_percent="0.211"
-                app:layout_constraintWidth_percent="0.207" />
+                app:layout_constraintHeight_percent="0.209"
+                app:layout_constraintWidth_percent="0.083" />
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -158,7 +232,7 @@
                 android:includeFontPadding="false"
                 android:maxLines="2"
                 android:gravity="center"
-                android:text="이 앱이 종료되어도 설정한 알람이 울려야 합니다"
+                android:text="내가 만든 알람을\n기기 내에 저장합니다"
                 android:lineHeight="17dp"
                 android:textColor="#50000000"
                 app:autoSizeMaxTextSize="40dp"
@@ -167,8 +241,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline8"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHeight_percent="0.383 "
-                app:layout_constraintWidth_percent="0.408" />
+                app:layout_constraintHeight_percent="0.34 "
+                app:layout_constraintWidth_percent="0.282" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -194,17 +268,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.316" />
+                app:layout_constraintGuide_percent="0.271" />
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.544" />
+                app:layout_constraintGuide_percent="0.599" />
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:elevation="5dp"
+                android:elevation="1dp"
                 android:background="@drawable/permission_circle_back"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintHeight_percent="0.796"
@@ -214,9 +288,9 @@
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:background="@drawable/folder_open_black"
+                    android:background="@drawable/phone_android_black"
                     app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintWidth_percent="0.51"
+                    app:layout_constraintWidth_percent="0.6"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -226,9 +300,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:fontFamily="@font/jalnan"
+                android:gravity="center"
                 android:includeFontPadding="false"
-                android:maxLines="1"
-                android:text="저장"
+                android:maxLines="2"
+                android:text="다른 앱\n위에 표시"
                 android:lineHeight="17dp"
                 android:textColor="@color/black"
                 app:autoSizeMaxTextSize="40dp"
@@ -237,8 +312,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline10"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHeight_percent="0.211"
-                app:layout_constraintWidth_percent="0.084" />
+                app:layout_constraintHeight_percent="0.471"
+                app:layout_constraintWidth_percent="0.174" />
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -246,7 +321,7 @@
                 android:includeFontPadding="false"
                 android:maxLines="3"
                 android:gravity="center"
-                android:text="원하는 알람음을 설정하기 위해 내부 데이터에 접근합니다"
+                android:text="앱이 켜져있지 않아도\n알람이 울립니다"
                 android:lineHeight="17dp"
                 android:textColor="#50000000"
                 app:autoSizeMaxTextSize="40dp"
@@ -255,8 +330,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline11"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHeight_percent="0.594 "
-                app:layout_constraintWidth_percent="0.39" />
+                app:layout_constraintHeight_percent="0.34 "
+                app:layout_constraintWidth_percent="0.282" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
