@@ -98,7 +98,7 @@ public class AlarmListActivity extends BaseActivity {
             public void onChanged(List<AlarmItem> alarmItems) {
                 if(alarmItems.size() != 0) {
                     if(isFirstEnter) {
-                        getUiManager().printToast("알람을 불러왔습니다.");
+                        getUiManager().printToast("알람을 최신화했습니다.");
                     } else {
                         if(alarmItemList.size() < alarmItems.size()) {
                             getUiManager().printToast("알람이 설정됐습니다.");

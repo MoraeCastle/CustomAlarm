@@ -23,15 +23,20 @@
             android:enabled="true"
             android:exported="true"/>
 
-        <activity android:name=".IntroActivity">
+        <activity
+            android:exported="true"
+            android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PermissionActivity" />
         <activity
+            android:exported="false"
+            android:name=".PermissionActivity" />
+        <activity
+            android:exported="false"
             android:launchMode="singleTop"
             android:persistableMode="persistNever"
             android:autoRemoveFromRecents="true"
@@ -41,12 +46,19 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>-->
         </activity>
-        <activity android:name=".AlarmInfoActivity" />
         <activity
+            android:exported="false"
+            android:name=".AlarmInfoActivity" />
+        <activity
+            android:exported="false"
             android:showOnLockScreen="true"
             android:name=".AlarmPrintActivity" />
-        <activity android:name=".SettingActivity" />
-        <activity android:name=".MainActivity" />
+        <activity
+            android:exported="false"
+            android:name=".SettingActivity" />
+        <activity
+            android:exported="false"
+            android:name=".MainActivity" />
     </application>
 
 </manifest>

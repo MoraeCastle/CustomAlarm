@@ -70,7 +70,7 @@ public class AlarmService extends Service {
         startForeground(1, new NotificationCompat.Builder(this,
                 Type.AlarmService) // don't forget create a notification channel first
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.logo)
+                .setSmallIcon(R.mipmap.ic_logo)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText("알람을 울리기 위해 대기중입니다.")
                 .setContentIntent(null)
