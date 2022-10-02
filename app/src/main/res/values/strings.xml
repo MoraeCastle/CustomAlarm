@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CustomAlarm</string>
+    <string name="app_name">내맘대로 알람</string>
     <string name="intro">편하고 쉬운 알람설정\n내맘대로 알람</string>
     <string name="toastMessage">한번 더 누르면 앱이 종료됩니다</string>
 
