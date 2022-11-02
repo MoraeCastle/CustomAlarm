@@ -52,7 +52,7 @@ public class AlarmListActivity extends BaseActivity {
     private ArrayList<AlarmItem> alarmItemList;
 
     // 타이머
-    private Timer timerCall;
+    private static Timer timerCall;
     private boolean isActiveAlarm = false;
     private BroadcastReceiver broadcastReceiver;
 
@@ -120,7 +120,7 @@ public class AlarmListActivity extends BaseActivity {
                     /*Log.d(TAG, "[" + alarmItems.indexOf(item) + "] 번째 아이템");
                     Log.d(TAG, "- ID : " + item.getId());
                     Log.d(TAG, "- Date : " + item.getDate());
-                    Log.d(TAG, "- Time2 : " + item.getTime());
+                    Log.d(TAG, "- Time : " + item.getTime());
                     Log.d(TAG, "- List : " + item.getDayOfWeek());
                     Log.d(TAG, "- Name : " + item.getName());
                     Log.d(TAG, "- Type : " + item.getType());
@@ -175,6 +175,9 @@ public class AlarmListActivity extends BaseActivity {
                     String reCallString = getSystem().addAlarmMinute(
                             currentTime[0] + " " + currentTime[1], targetAlarm.getRepeat());
                     targetAlarm.setReCallDate(reCallString);
+
+                    // 테스트
+                    targetAlarm.setTime(reCallString.split(" ")[1]);
 
                     setAlarmData(targetAlarm);
                     isActiveAlarm = false;

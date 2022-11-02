@@ -74,6 +74,43 @@ public class AlarmPrintActivity extends BaseActivity {
      */
     private List<String> alarmData;
 
+    private Intent closeTypeIntent = null;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "종료...");
+
+        // 알람음 및 진동 종료.
+        vibratorManager.cancel();
+        mediaManager.releaseRingtone();
+
+        // 강제 종료 시, 무조건 알람을 비활성화 한다.
+        if(closeTypeIntent == null) {
+            Log.d(TAG, "알람이 강제로 종료됨...");
+
+            if(!getSystem().checkActivity(getApplicationContext(), "AlarmListActivity")) {
+                closeTypeIntent = new Intent("android.intent.category.LAUNCHER");
+                closeTypeIntent.setClassName("com.bbi.customalarm", "com.bbi.customalarm.AlarmListActivity");
+                closeTypeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(closeTypeIntent);
+
+                Log.d(TAG, "메인이 닫혀서 이제 열었습니다.");
+            } else {
+                Log.d(TAG, "메인이 열려있습니다.");
+            }
+
+            if(isRepeat) {
+                closeTypeIntent = new Intent(Type.ReCallAlarm);
+            } else {
+                closeTypeIntent = new Intent(Type.FinishAlarm);
+            }
+
+            sendBroadcast(closeTypeIntent);
+            finish();
+        }
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +119,8 @@ public class AlarmPrintActivity extends BaseActivity {
         vibratorManager = new VibrationManager(this);
         mediaManager = new MediaManager(this);
 
+        Log.d(TAG, "시작..");
+        
         alarmData = new ArrayList<>();
         if(getIntent() != null) {
             if(getIntent().hasExtra("alarmDataList")) {
@@ -110,6 +149,8 @@ public class AlarmPrintActivity extends BaseActivity {
                 closeLayout.setVisibility(View.VISIBLE);
 
                 isRepeat = true;
+
+                Log.d(TAG, "다시 울려야 합니다. aaaaa");
             }
 
             isDataOk = true;
@@ -183,19 +224,18 @@ public class AlarmPrintActivity extends BaseActivity {
                 vibratorManager.cancel();
 
                 if(!getSystem().checkActivity(getApplicationContext(), "AlarmListActivity")) {
-                    Intent intent = new Intent("android.intent.category.LAUNCHER");
-                    intent.setClassName("com.bbi.customalarm", "com.bbi.customalarm.AlarmListActivity");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    closeTypeIntent = new Intent("android.intent.category.LAUNCHER");
+                    closeTypeIntent.setClassName("com.bbi.customalarm", "com.bbi.customalarm.AlarmListActivity");
+                    closeTypeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(closeTypeIntent);
                 }
 
-                Intent intent;
                 if(isRepeat) {
-                    intent = new Intent(Type.ReCallAlarm);
+                    closeTypeIntent = new Intent(Type.ReCallAlarm);
                 } else {
-                    intent = new Intent(Type.FinishAlarm);
+                    closeTypeIntent = new Intent(Type.FinishAlarm);
                 }
-                sendBroadcast(intent);
+                sendBroadcast(closeTypeIntent);
                 finish();
             }
         });
@@ -208,14 +248,14 @@ public class AlarmPrintActivity extends BaseActivity {
                 vibratorManager.cancel();
 
                 if(!getSystem().checkActivity(getApplicationContext(), "AlarmListActivity")) {
-                    Intent intent = new Intent("android.intent.category.LAUNCHER");
-                    intent.setClassName("com.bbi.customalarm", "com.bbi.customalarm.AlarmListActivity");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    closeTypeIntent = new Intent("android.intent.category.LAUNCHER");
+                    closeTypeIntent.setClassName("com.bbi.customalarm", "com.bbi.customalarm.AlarmListActivity");
+                    closeTypeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(closeTypeIntent);
                 }
-                
-                Intent intent = new Intent(Type.FinishAlarm);
-                sendBroadcast(intent);
+
+                closeTypeIntent = new Intent(Type.FinishAlarm);
+                sendBroadcast(closeTypeIntent);
                 finish();
             }
         });

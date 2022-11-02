@@ -26,7 +26,15 @@ public class Type {
     // Intent
     public static String AlarmId = "AlarmId";
     public static String AlarmData = "alarmDataList";
+
+    /**
+     * 알람종료 타입 - 비활성
+     */
     public static String FinishAlarm = "alarmFinished";
+
+    /**
+     * 알람종료 타입 - 다시 울리기
+     */
     public static String ReCallAlarm = "reCallAlarm";
     public static String RefreshTime = "refreshTime";
     public static String CheckAlarm = "checkAlarm";
