@@ -43,6 +43,10 @@ public class PermissionActivity extends BaseActivity {
                 checkDrawOverlays();
             }
         });
+
+        if (Settings.canDrawOverlays(this)) {
+            moveNextScene();
+        }
     }
 
     /**
