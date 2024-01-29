@@ -292,6 +292,7 @@ public class AlarmService extends Service {
                 // 첫 번째 알람을 울립니다.
                 Intent intent = new Intent(getApplicationContext(), AlarmPrintActivity.class);
                 intent.putExtra(Type.AlarmData, data);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 플래그 설정
                 startActivity(intent);
 
                 isAlarmCalling = true;
