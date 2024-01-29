@@ -46,7 +46,7 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
-    public void setOnItemLongClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         clickListener = listener;
     }
 

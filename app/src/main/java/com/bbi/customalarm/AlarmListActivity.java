@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bbi.customalarm.Adapter.AlarmListAdapter;
 import com.bbi.customalarm.Object.AlarmItem;
 import com.bbi.customalarm.Room.AlarmDao;
+import com.bbi.customalarm.Service.AlarmService;
 import com.bbi.customalarm.System.BaseActivity;
 import com.bbi.customalarm.System.Type;
 import com.bbi.customalarm.System.VerticalSpaceItemDecoration;
@@ -46,37 +47,29 @@ public class AlarmListActivity extends BaseActivity {
     private boolean isFirstEnter = true;
 
     // 알람 리스트
+    private ArrayList<AlarmItem> alarmItemList;
+
     private AlarmListAdapter alarmListAdapter;
     private boolean isAdapterItemClick = false;
     private boolean isAddAlarmClick = false;
-    private ArrayList<AlarmItem> alarmItemList;
-
-    // 타이머
-    private static Timer timerCall;
-    private boolean isActiveAlarm = false;
-    private BroadcastReceiver broadcastReceiver;
-
-    // 다시 울리는 시간.
-    private AlarmItem targetAlarm = null;
 
     @Override
     protected void onStop() {
-        super.onStop();
         Log.d(TAG, "AlarmListActivity : onStop");
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         Log.d(TAG, "AlarmListActivity : onDestroy");
-        //timerCall.cancel();
+        super.onDestroy();
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "AlarmListActivity : onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_list);
-        Log.d(TAG, "AlarmListActivity : onCreate");
 
         settingBtn = findViewById(R.id.alarmList_settingBtn);
         alarmCount = findViewById(R.id.alarmList_alarmCount);
@@ -84,7 +77,6 @@ public class AlarmListActivity extends BaseActivity {
         addAlarmBtn = findViewById(R.id.alarmList_addAlarmBtn);
 
         alarmItemList = new ArrayList<>();
-
         alarmListView.addItemDecoration(new VerticalSpaceItemDecoration(10));
         alarmListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         alarmListAdapter = new AlarmListAdapter(this, alarmItemList);
@@ -112,7 +104,6 @@ public class AlarmListActivity extends BaseActivity {
 
                 alarmItemList.clear();
                 //alarmListAdapter.notifyDataSetChanged();
-
                 Log.d(TAG, "조회된 알람 갯수: " + alarmItems.size());
                 for (AlarmItem item : alarmItems) {
                     alarmItemList.add(item);
@@ -131,71 +122,11 @@ public class AlarmListActivity extends BaseActivity {
                     Log.d(TAG, "- Active : " + item.isActive());*/
                 }
                 alarmListAdapter.notifyDataSetChanged();
+
+                // 타이머를 위해 데이터 최신화.
+                AlarmService.setAlarmList(alarmItemList);
             }
         });
-
-        timerCall = new Timer();
-        timerCall.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // 알람이 울리지 않을 떄만.
-                if(!isActiveAlarm) {
-                    Log.d(TAG, "알람 탐색...");
-
-                    checkAlarmTime();
-                } else {
-                    Log.d(TAG, "알람이 울리고 있습니다.");
-                    Intent intent = new Intent(Type.RefreshTime);
-                    sendBroadcast(intent);
-                }
-            }
-        }, 0, 3000);
-
-        // 돌아왔을 떄.
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context arg0, Intent intent) {
-                String action = intent.getAction();
-
-                if (action.equals(Type.FinishAlarm)) {
-                    Log.d(TAG, "알람이 꺼졌습니다...");
-
-                    if(targetAlarm != null) {
-                        targetAlarm.setReCallDate("");
-                        setDisableAlarmItem(targetAlarm);
-                        targetAlarm = null;
-                    }
-
-                    isActiveAlarm = false;
-                } else if (action.equals(Type.ReCallAlarm)) {
-                    Log.d(TAG, "다시 울립니다.");
-                    getUiManager().printToast(targetAlarm.getRepeat() + "분 후에 다시 울립니다.");
-
-                    String[] currentTime = getSystem().getCurrentTimeToString(true).split(" ");
-                    String reCallString = getSystem().addAlarmMinute(
-                            currentTime[0] + " " + currentTime[1], targetAlarm.getRepeat());
-                    targetAlarm.setReCallDate(reCallString);
-
-                    // 테스트
-                    targetAlarm.setTime(reCallString.split(" ")[1]);
-
-                    setAlarmData(targetAlarm);
-                    isActiveAlarm = false;
-                }/* else if(action.equals(Type.CheckAlarm)) {
-                    Log.d(TAG, "알람 체크....0");
-
-                    if(!isActiveAlarm) {
-                        checkAlarmTime();
-                    } else {
-                        Log.d(TAG, "알람이 울리고 있습니다.");
-                        Intent broadCast = new Intent(Type.RefreshTime);
-                        sendBroadcast(broadCast);
-                    }
-                }*/
-            }
-        };
-        registerReceiver(broadcastReceiver, new IntentFilter(Type.FinishAlarm));
-        registerReceiver(broadcastReceiver, new IntentFilter(Type.ReCallAlarm));
     }
 
     @Override
@@ -210,6 +141,7 @@ public class AlarmListActivity extends BaseActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
                 startActivity(intent);
+                // finish();
             }
         });
 
@@ -219,9 +151,10 @@ public class AlarmListActivity extends BaseActivity {
             public void onClick(View view) {
                 if(!isAddAlarmClick) {
                     isAddAlarmClick = true;
+
+                    isFirstEnter = false;
                     Intent intent = new Intent(getApplicationContext(), AlarmInfoActivity.class);
                     startActivity(intent);
-                    isFirstEnter = false;
 
                     // 중복 클릭 방지.
                     new Handler().postDelayed(new Runnable() {
@@ -234,14 +167,15 @@ public class AlarmListActivity extends BaseActivity {
             }
         });
 
-        // 아이템 클릭, 롱클릭.
-        alarmListAdapter.setOnItemLongClickListener(new AlarmListAdapter.OnItemClickListener() {
+        // 리스트 아이템 클릭, 롱클릭.
+        alarmListAdapter.setOnItemClickListener(new AlarmListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if(!isAdapterItemClick) {
                     isAdapterItemClick = true;
-                    Intent intent = new Intent(getApplicationContext(), AlarmInfoActivity.class);
                     Log.e(TAG, " -1 아이디는 " + alarmItemList.get(position).getId());
+
+                    Intent intent = new Intent(getApplicationContext(), AlarmInfoActivity.class);
                     intent.putExtra(Type.AlarmId, alarmItemList.get(position).getId());
                     startActivity(intent);
                     isFirstEnter = false;
@@ -267,7 +201,8 @@ public class AlarmListActivity extends BaseActivity {
                 builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        new DeleteAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItemList.get(position));
+                        // 삭제
+                        new AlarmService.DeleteAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItemList.get(position));
                         getUiManager().printToast("삭제되었습니다.");
                     }
                 });
@@ -276,6 +211,7 @@ public class AlarmListActivity extends BaseActivity {
             }
         });
 
+        // 활성/비활성
         alarmListAdapter.setOnCheckedChangeListener(new AlarmListAdapter.OnCheckedChangeListener() {
             @Override
             public void onCheckedChange(int position, boolean isActive) {
@@ -283,7 +219,7 @@ public class AlarmListActivity extends BaseActivity {
                 if(isActive || alarmItemList.get(position).getType().equals(Type.DayOfTheWeek)) {
                     alarmListAdapter.switchCompatMap.get(position).setChecked(!isActive);
                     alarmItemList.get(position).setActive(!isActive);
-                    new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItemList.get(position));
+                    new AlarmService.UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItemList.get(position));
                 } else {
                     // 시간 검증.
                     // 만약 시간이 지났으면 내일로 재설정 합니다.
@@ -294,165 +230,34 @@ public class AlarmListActivity extends BaseActivity {
 
                     alarmListAdapter.switchCompatMap.get(position).setChecked(!isActive);
                     alarmItemList.get(position).setActive(!isActive);
-                    new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItemList.get(position));
+                    new AlarmService.UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItemList.get(position));
                 }
             }
         });
     }
 
     /**
-     * 울려야 할 알람을 확인하고, 울립니다.
-     * 울리는 알람타입 우선순위는 날짜 > 요일 입니다.
-     * 시간이 겹치는 경우 우선순위는 기존 > 나중에 울릴알람 입니다.
-     */
-    private void checkAlarmTime() {
-        if(alarmItemList.size() != 0) {
-            List<AlarmItem> itemList = new ArrayList<>();
-
-            // 현재시간과 알람시간이 같은 알람만 저장.
-            for (AlarmItem dataItem : alarmItemList) {
-                // 활성화 된 알람만.
-                if(dataItem.isActive()) {
-                    // 다시 울려야 할 알람인지?
-                    if(!dataItem.getReCallDate().equals("")) {
-                        if(getSystem().alarmDateCheck(getSystem().setReCallDate(dataItem.getReCallDate()))) {
-                            itemList.add(dataItem);
-                        }
-                    } else {
-                        // 요일인지 날짜인지?
-                        // 삽입 우선순위는 날짜이다.
-                        // 날짜알람은 무조건 앞에 쌓인다.
-                        if(dataItem.getType().equals(Type.DayOfTheWeek)) {
-                            if(getSystem().alarmDateCheckToWeek(
-                                    dataItem.getDayOfWeek().toString(), dataItem.getDate(), dataItem.getTime())) {
-                                itemList.add(dataItem);
-                            }
-                        } else {
-                            if(getSystem().alarmDateCheck(dataItem.getDate(), dataItem.getTime())) {
-                                itemList.add(0, dataItem);
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 울릴 알람이 있는지?
-            if(itemList.size() > 0) {
-                // 현재 앱이 꺼져있으면 다시 깨웁니다.
-                /*if(!getSystem().isAppActive()) {
-                    Intent intent = new Intent("android.intent.category.LAUNCHER");
-                    intent.setClassName("com.bbi.customalarm", "com.bbi.customalarm.AlarmListActivity");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
-                }*/
-
-                targetAlarm = itemList.get(0);
-                String printDate, printTime;
-                if(targetAlarm.getReCallDate().equals("")) {
-                    if(targetAlarm.getType().equals(Type.DayOfTheWeek)) {
-                        printDate = getSystem().getCurrentTimeToString(false);
-                    } else {
-                        printDate = targetAlarm.getDate();
-                    }
-                    printTime = targetAlarm.getTime();
-                } else {
-                    printDate = targetAlarm.getReCallDate().split(" ")[0];
-                    printTime = targetAlarm.getReCallDate().split(" ")[1];
-                }
-
-                String[] data = new String[]{
-                        printDate,
-                        printTime,
-                        targetAlarm.getName(),
-                        targetAlarm.getRingUri().toString(),
-                        targetAlarm.getVibrationType(),
-                        String.valueOf(targetAlarm.getRepeat())
-                };
-
-                // 첫 번째 알람을 울립니다.
-                Intent intent = new Intent(getApplicationContext(), AlarmPrintActivity.class);
-                intent.putExtra(Type.AlarmData, data);
-                startActivity(intent);
-
-                isActiveAlarm = true;
-
-                // 첫 번째 알람 이외는 비활성 처리합니다.
-                // 나중에 상단에 부재중 알람을 표시해야 합니다.
-                for (AlarmItem item : itemList) {
-                    if(itemList.indexOf(item) != 0) {
-                        setDisableAlarmItem(item);
-                    }
-                }
-            } else {
-                Log.d(TAG, "타이머: 울릴 알람이 없습니다.");
-            }
-        }
-    }
-
-    /**
-     * 알람 아이템의 상태를 비활성화 시킵니다.
-     * 요일알람의 경우 갱신상태를 최신화 시킵니다.
-     */
-    private void setDisableAlarmItem(AlarmItem item) {
-        for (AlarmItem data : alarmItemList) {
-            if(item.getId() == data.getId()) {
-                data.setReCallDate("");
-
-                // 요일의 경우 울린날짜를 저장합니다.(갱신여부)
-                if(data.getType().equals(Type.DayOfTheWeek)) {
-                    data.setDate(getSystem().getCurrentTimeToString(false));
-                    new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(data);
-                } else {
-                    // 날짜알람인 경우 그냥 비활성화 시킵니다.(활성화 시 날짜체크함)
-                    data.setActive(false);
-                    new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(data);
-                }
-
-                return;
-            }
-        }
-
-        Log.d(TAG, "알람 비활성화: 활성화 될 아이템 찾지 못함.");
-    }
-
-    /**
-     * 알람아이템을 업데이트합니다.
-     * 유효한 아이템이여야 실행됩니다.
-     */
-    private void setAlarmData(AlarmItem item) {
-        for (AlarmItem data : alarmItemList) {
-            if(item.getId() == data.getId()) {
-                new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(item);
-                return;
-            }
-        }
-    }
-
-    /**
      * 다른 앱 위에 표시하기를 체크합니다.
      */
     private void checkDrawOverlays() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(this)) {
-                Log.d(TAG, "다른 앱 위에 그리기.");
-                getUiManager().showDialog(this, "안내", "앱이 꺼져있어도 알람이 울리려면 다른 앱 위에 표시하는 권한을 체크해야 합니다.",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                getUiManager().printToast("앱이 종료되면 알림이 울리지 않습니다.");
-                            }
-                        }, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Log.d(TAG, "2");
-                                Intent appDetail = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                                appDetail.addCategory(Intent.CATEGORY_DEFAULT);
-                                appDetail.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(appDetail);
-                            }
-                        }, "거절", "이동", false);
-            }
+        if (!Settings.canDrawOverlays(this)) {
+            Log.d(TAG, "다른 앱 위에 그리기.");
+            getUiManager().showDialog(this, "안내", "앱이 꺼져있어도 알람이 울리려면 다른 앱 위에 표시하는 권한을 체크해야 합니다.",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            getUiManager().printToast("앱이 종료되면 알림이 울리지 않습니다.");
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Log.d(TAG, "2");
+                            Intent appDetail = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                            appDetail.addCategory(Intent.CATEGORY_DEFAULT);
+                            appDetail.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(appDetail);
+                        }
+                    }, "거절", "이동", false);
         }
     }
 

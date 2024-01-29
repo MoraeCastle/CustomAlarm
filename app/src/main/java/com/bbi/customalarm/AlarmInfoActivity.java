@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bbi.customalarm.Adapter.AlarmListAdapter;
 import com.bbi.customalarm.Object.AlarmItem;
+import com.bbi.customalarm.Service.AlarmService;
 import com.bbi.customalarm.System.BaseActivity;
 import com.bbi.customalarm.System.Type;
 import com.bbi.customalarm.System.VibrationManager;
@@ -93,6 +94,9 @@ public class AlarmInfoActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_info);
+
+        Log.d("start...", "1");
+
         //setMoveClass(AlarmListActivity.class);
         setMoveClassToastMsg("한번 더 터치시 저장내용이 사라집니다.");
         vibratorManager = new VibrationManager(this);
@@ -315,9 +319,9 @@ public class AlarmInfoActivity extends BaseActivity {
                         alarmItem.setReCallDate("");
 
                         if(isEditMode) {
-                            new UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItem);
+                            new AlarmService.UpdateAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItem);
                         } else {
-                            new InsertAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItem);
+                            new AlarmService.InsertAsyncTask(getAlarmDatabase().alarmDao()).execute(alarmItem);
                         }
                         finish();
                     } catch (Exception e) {

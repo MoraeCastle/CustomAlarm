@@ -76,20 +76,23 @@ public class AlarmPrintActivity extends BaseActivity {
 
     private Intent closeTypeIntent = null;
 
+    private BroadcastReceiver broadcastReceiver;
+
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         Log.d(TAG, "종료...");
+        super.onDestroy();
 
         // 알람음 및 진동 종료.
         vibratorManager.cancel();
         mediaManager.releaseRingtone();
+        //unregisterReceiver(broadcastReceiver);
 
         // 강제 종료 시, 무조건 알람을 비활성화 한다.
         if(closeTypeIntent == null) {
             Log.d(TAG, "알람이 강제로 종료됨...");
 
-            if(!getSystem().checkActivity(getApplicationContext(), "AlarmListActivity")) {
+            /*if(!getSystem().checkActivity(getApplicationContext(), "AlarmListActivity")) {
                 closeTypeIntent = new Intent("android.intent.category.LAUNCHER");
                 closeTypeIntent.setClassName("com.bbi.customalarm", "com.bbi.customalarm.AlarmListActivity");
                 closeTypeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -98,7 +101,7 @@ public class AlarmPrintActivity extends BaseActivity {
                 Log.d(TAG, "메인이 닫혀서 이제 열었습니다.");
             } else {
                 Log.d(TAG, "메인이 열려있습니다.");
-            }
+            }*/
 
             if(isRepeat) {
                 closeTypeIntent = new Intent(Type.ReCallAlarm);
@@ -168,16 +171,17 @@ public class AlarmPrintActivity extends BaseActivity {
             }
         }
 
-        registerReceiver(new BroadcastReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context arg0, Intent intent) {
+            public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
 
                 if (action.equals(Type.RefreshTime)) {
                     timeTxt.setText(getSystem().getCurrentTimeToString(true).split(" ")[1]);
                 }
             }
-        }, new IntentFilter(Type.RefreshTime));
+        };
+        registerReceiver(broadcastReceiver, new IntentFilter(Type.RefreshTime));
 
         // 화면 깨우기.
         if(getSystemService(POWER_SERVICE) != null) {

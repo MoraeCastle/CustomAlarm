@@ -3,6 +3,7 @@ package com.bbi.customalarm;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,7 +20,8 @@ public class IntroActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
-        if(getSystem().isDisagreePermission(getApplicationContext(), getResources().getStringArray(R.array.permission_intro))) {
+        // 다른 앱 위에 그리기 권한 확인.
+        if (!Settings.canDrawOverlays(this)) {
             moveNextScene = PermissionActivity.class;
         } else {
             moveNextScene = AlarmListActivity.class;

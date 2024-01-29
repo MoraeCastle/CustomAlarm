@@ -59,81 +59,17 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(moveClass != null) {
-            Intent intent = new Intent (getApplicationContext(), moveClass);
+        super.onBackPressed();
+        if (moveClass != null) {
+            Intent intent = new Intent(getApplicationContext(), moveClass);
             startActivity(intent);
             finish();
         } else {
-            if(getUiManager().isToastActive()) {
+            if (getUiManager().isToastActive()) {
                 finish();
             } else {
                 getUiManager().printToast(moveClassToastMsg);
             }
-        }
-    }
-
-    /**
-     * DB
-     */
-    // 데이터베이스 접근
-    // 백그라운드작업(메인스레드 X)
-    // 추가
-    public static class InsertAsyncTask extends AsyncTask<AlarmItem, Void, Void> {
-        private AlarmDao alarmDao;
-
-        public InsertAsyncTask(AlarmDao memoDao){
-            this.alarmDao = memoDao;
-        }
-
-        @Override
-        protected Void doInBackground(AlarmItem... memoItems) {
-            alarmDao.insert(memoItems[0]);
-            return null;
-        }
-    }
-
-    // 삭제
-    public static class DeleteAsyncTask extends AsyncTask<AlarmItem, Void, Void> {
-        private AlarmDao alarmDao;
-
-        public DeleteAsyncTask(AlarmDao memoDao){
-            this.alarmDao = memoDao;
-        }
-
-        @Override
-        protected Void doInBackground(AlarmItem... memoItems) {
-            alarmDao.delete(memoItems[0]);
-            return null;
-        }
-    }
-
-    // 모두 삭제
-    public static class DeleteAllAsyncTask extends AsyncTask<AlarmItem, Void, Void> {
-        private AlarmDao alarmDao;
-
-        public DeleteAllAsyncTask(AlarmDao memoDao){
-            this.alarmDao = memoDao;
-        }
-
-        @Override
-        protected Void doInBackground(AlarmItem... memoItems) {
-            alarmDao.deleteAll();
-            return null;
-        }
-    }
-
-    // 업데이트
-    public static class UpdateAsyncTask extends AsyncTask<AlarmItem, Void, Void> {
-        private AlarmDao alarmDao;
-
-        public UpdateAsyncTask(AlarmDao memoDao){
-            this.alarmDao = memoDao;
-        }
-
-        @Override
-        protected Void doInBackground(AlarmItem... memoItems) {
-            alarmDao.update(memoItems[0]);
-            return null;
         }
     }
 }

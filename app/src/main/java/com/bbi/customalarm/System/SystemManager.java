@@ -330,4 +330,18 @@ public class SystemManager {
 
         return false;
     }
+
+//    /**
+//     * 액티비티가 중복으로 열렸는지 확인하고, 해당 액티비티를 제외하고 finish.
+//     */
+//    public void checkOverlapActivity(Activity activity) {
+//        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+//        List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(Integer.MAX_VALUE);
+//
+//        for (ActivityManager.RunningTaskInfo task : tasks) {
+//            if(task.baseActivity.equals(activity)) {
+//                Log.d("System", " 같습니다.");
+//            }
+//        }
+//    }
 }
