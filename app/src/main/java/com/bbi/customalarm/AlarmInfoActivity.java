@@ -10,7 +10,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,24 +18,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.bbi.customalarm.Adapter.AlarmListAdapter;
 import com.bbi.customalarm.Object.AlarmItem;
 import com.bbi.customalarm.Service.AlarmService;
 import com.bbi.customalarm.System.BaseActivity;
@@ -45,7 +39,6 @@ import com.bbi.customalarm.System.VibrationManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -73,18 +66,18 @@ public class AlarmInfoActivity extends BaseActivity {
     private Button week1Btn, week2Btn, week3Btn, week4Btn, week5Btn, week6Btn, week7Btn;
 
     // 데이터
-    private EditText typeAlarmName;
+    private EditText editTitle;
     private TextView dateTxt;
     private TextView ringName;
-    private TextView callType;
-    private TextView reCallType;
+    private TextView shakeName;
+    private TextView reCallName;
+    private LinearLayout ringNameLayout, shakeNameLayout, reCallNameLayout;
 
     private Intent saveIntent;
 
     // 알람
     private final static int REQUESTCODE_RINGTONE_PICKER = 1000;
     private MediaPlayer mMediaPlayer;
-    private ImageButton ringBtn, callBtn, reCallBtn;
     private String m_strRingToneUri;
     private VibrationManager vibratorManager;
 
@@ -169,15 +162,16 @@ public class AlarmInfoActivity extends BaseActivity {
         week6Btn.setOnClickListener(weekBtnListener);
         week7Btn.setOnClickListener(weekBtnListener);
 
-        typeAlarmName = findViewById(R.id.alarmInfo_alarmNameEdit);
         dateTxt = findViewById(R.id.alarmInfo_dateTxt);
-        ringName = findViewById(R.id.alarmInfo_alarmRingTxt);
-        callType = findViewById(R.id.alarmInfo_alarmCallTxt);
-        reCallType = findViewById(R.id.alarmInfo_alarmReCallTxt);
 
-        ringBtn = findViewById(R.id.alarmInfo_alarmRingBtn);
-        callBtn = findViewById(R.id.alarmInfo_alarmCallBtn);
-        reCallBtn = findViewById(R.id.alarmInfo_alarmReCallBtn);
+        editTitle = findViewById(R.id.alarmInfo_editTitle);
+        ringName = findViewById(R.id.alarmInfo_textCall);
+        shakeName = findViewById(R.id.alarmInfo_textShake);
+        reCallName = findViewById(R.id.alarmInfo_textReCall);
+
+        ringNameLayout = findViewById(R.id.alarmInfo_textCallLayout);
+        shakeNameLayout = findViewById(R.id.alarmInfo_textShakeLayout);
+        reCallNameLayout = findViewById(R.id.alarmInfo_textReCallLayout);
 
         getUiManager().setToastView(findViewById(R.id.activity_alarm_info));
 
@@ -344,7 +338,7 @@ public class AlarmInfoActivity extends BaseActivity {
             }
         });
 
-        typeAlarmName.addTextChangedListener(new TextWatcher() {
+        editTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -360,13 +354,13 @@ public class AlarmInfoActivity extends BaseActivity {
             }
         });
 
-        ringBtn.setOnClickListener(new View.OnClickListener() {
+        ringNameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showRingtoneChooser();
             }
         });
-        callBtn.setOnClickListener(new View.OnClickListener() {
+        shakeNameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 List<String> array = Arrays.asList(getResources().getStringArray(R.array.alarm_vibration_type));
@@ -389,10 +383,10 @@ public class AlarmInfoActivity extends BaseActivity {
                         if(type != null) {
                             vibratorManager.setType(type);
                             vibratorManager.vibrate(-1);
-                            callType.setText(array.get(position));
+                            shakeName.setText(array.get(position));
                             alarmItem.setVibrationType(String.valueOf(VibrationManager.VibrateType.values()[position - 1]));
                         } else {
-                            callType.setText(getString(R.string.default_callType));
+                            shakeName.setText(getString(R.string.default_callType));
                             alarmItem.setVibrationType("");
                         }
 
@@ -404,7 +398,7 @@ public class AlarmInfoActivity extends BaseActivity {
                 alertDialog.show();
             }
         });
-        reCallBtn.setOnClickListener(new View.OnClickListener() {
+        reCallNameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 List<String> array = Arrays.asList(getResources().getStringArray(R.array.alarm_vibration_count));
@@ -416,11 +410,11 @@ public class AlarmInfoActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int position) {
                         if(position != 0) {
-                            reCallType.setText(array.get(position));
+                            reCallName.setText(array.get(position));
                             int repeat = Integer.parseInt(array.get(position).replace("분", ""));
                             alarmItem.setRepeat(repeat);
                         } else {
-                            reCallType.setText(getResources().getString(R.string.default_reCallType));
+                            reCallName.setText(getResources().getString(R.string.default_reCallType));
                             alarmItem.setRepeat(0);
                         }
                     }
@@ -489,7 +483,7 @@ public class AlarmInfoActivity extends BaseActivity {
             }
         }
 
-        if (typeAlarmName.getText().toString().equals("")){
+        if (editTitle.getText().toString().equals("")){
             getUiManager().printToast("알람 이름을 입력해주세요.");
             return false;
         } else if (ringName.getText().toString().equals(getString(R.string.default_ringType))) {
@@ -557,15 +551,21 @@ public class AlarmInfoActivity extends BaseActivity {
             //-- 선택된 링톤을 재생하도록 한다.
             if (resultCode == RESULT_OK) {
                 Uri ring = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+
+                if (ring == null) return;
+
                 alarmItem.setRingUri(ring);
 
-                String fileName = DocumentFile.fromSingleUri(this, ring).getName().replace(".ogg", "");
+                DocumentFile file = DocumentFile.fromSingleUri(this, ring);
+                if (file != null) {
+                    String fileName = file.getName().contains("ogg") ? file.getName().replace(".ogg", "") : file.getName();
 
-                if (ring != null) {
-                    ringName.setText(fileName);
-                    //this.startRingtone( ring );
-                } else {
-                    ringName.setText( getResources().getString(R.string.default_ringType));
+                    if (fileName != null) {
+                        ringName.setText(fileName);
+                        //this.startRingtone( ring );
+                    } else {
+                        ringName.setText( getResources().getString(R.string.default_ringType));
+                    }
                 }
             }
         }
@@ -600,16 +600,16 @@ public class AlarmInfoActivity extends BaseActivity {
             //week1Btn.setBackground(getResources().getDrawable(R.drawable.day_btn_off));
         }
 
-        typeAlarmName.setText(item.getName());
+        editTitle.setText(item.getName());
         ringName.setText(DocumentFile.fromSingleUri(AlarmInfoActivity.this, item.getRingUri())
                 .getName().replace(".ogg", ""));
 
         if(!item.getVibrationType().equals("")) {
             String type = VibrationManager.getKType(item.getVibrationType());
-            callType.setText(type);
+            shakeName.setText(type);
         }
         if(item.getRepeat() != 0) {
-            reCallType.setText(item.getRepeat() + "분");
+            reCallName.setText(item.getRepeat() + "분");
         }
     }
 }

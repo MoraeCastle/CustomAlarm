@@ -150,7 +150,7 @@ public class AlarmListActivity extends BaseActivity {
         addAlarmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*if(!isAddAlarmClick) {
+                if(!isAddAlarmClick) {
                     isAddAlarmClick = true;
 
                     isFirstEnter = false;
@@ -164,7 +164,7 @@ public class AlarmListActivity extends BaseActivity {
                             isAddAlarmClick = false;
                         }
                     }, 1000);
-                }*/
+                }
             }
         });
 

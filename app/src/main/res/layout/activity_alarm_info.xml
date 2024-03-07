@@ -356,119 +356,167 @@
                         <!--알람 이름-->
                         <LinearLayout
                             android:layout_weight="1"
-                            android:id="@+id/alarmInfo_alarmNameLayout"
                             android:gravity="center"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-                            <ImageView
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:adjustViewBounds="true"
-                                android:background="#00FFFFFF"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/edit_img"
-                                android:padding="10dp"/>
-                            <EditText
-                                android:id="@+id/alarmInfo_alarmNameEdit"
-                                android:layout_marginLeft="20dp"
-                                android:layout_width="match_parent"
+                            <TextView
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/edit_img"
-                                android:hint="알람 이름"
-                                android:textSize="15dp"/>
+                                android:layout_marginLeft="10dp"
+                                android:fontFamily="@font/jalnan"
+                                android:textColor="@color/black"
+                                android:textSize="17dp"
+                                android:text="이름"/>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginRight="5dp"
+                                android:background="@drawable/button_type_back"
+                                android:elevation="1dp">
+                                <EditText
+                                    android:id="@+id/alarmInfo_editTitle"
+                                    android:layout_margin="5dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@null"
+                                    android:fontFamily="@font/jalnan"
+                                    android:textColor="@color/black"
+                                    android:gravity="center"
+                                    android:textSize="15dp"
+                                    android:importantForAutofill="no" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <!--알람음-->
                         <LinearLayout
                             android:layout_weight="1"
-                            android:id="@+id/alarmInfo_alarmRingLayout"
                             android:gravity="center"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-                            <ImageButton
-                                android:id="@+id/alarmInfo_alarmRingBtn"
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:adjustViewBounds="true"
-                                android:background="#00FFFFFF"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/notifications_black"
-                                android:padding="10dp"/>
                             <TextView
-                                android:id="@+id/alarmInfo_alarmRingTxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:fontFamily="@font/jalnan"
+                                android:textColor="@color/black"
+                                android:textSize="17dp"
+                                android:text="소리"/>
+                            <LinearLayout
+                                android:id="@+id/alarmInfo_textCallLayout"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="20dp"
-                                android:src="@drawable/edit_img"
-                                android:gravity="center"
-                                android:text="알람 선택"
-                                android:textSize="15dp"/>
+                                android:layout_height="50dp"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginRight="5dp"
+                                android:background="@drawable/button_type_back"
+                                android:elevation="1dp">
+                                <TextView
+                                    android:id="@+id/alarmInfo_textCall"
+                                    android:layout_margin="5dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:fontFamily="@font/jalnan"
+                                    android:textColor="@color/black"
+                                    android:maxLines="1"
+                                    android:ellipsize="marquee"
+                                    android:background="@null"
+                                    android:gravity="center"
+                                    android:textSize="15dp"/>
+                            </LinearLayout>
                         </LinearLayout>
 
-                        <!--알람음-->
+                        <!--진동-->
                         <LinearLayout
                             android:layout_weight="1"
-                            android:id="@+id/alarmInfo_alarmCallLayout"
                             android:gravity="center"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-                            <ImageButton
-                                android:id="@+id/alarmInfo_alarmCallBtn"
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:src="@drawable/call_img"
-                                android:padding="10dp"
-                                android:adjustViewBounds="true"
-                                android:background="#00FFFFFF"
-                                android:scaleType="fitCenter"/>
                             <TextView
-                                android:id="@+id/alarmInfo_alarmCallTxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:fontFamily="@font/jalnan"
+                                android:textColor="@color/black"
+                                android:textSize="17dp"
+                                android:text="진동"/>
+                            <LinearLayout
+                                android:id="@+id/alarmInfo_textShakeLayout"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="20dp"
-                                android:src="@drawable/edit_img"
-                                android:gravity="center"
-                                android:text="진동 패턴 선택"
-                                android:textSize="15dp" />
+                                android:layout_height="50dp"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginRight="5dp"
+                                android:background="@drawable/button_type_back"
+                                android:elevation="1dp">
+                                <TextView
+                                    android:id="@+id/alarmInfo_textShake"
+                                    android:layout_margin="5dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:fontFamily="@font/jalnan"
+                                    android:textColor="@color/black"
+                                    android:maxLines="1"
+                                    android:ellipsize="marquee"
+                                    android:background="@null"
+                                    android:gravity="center"
+                                    android:textSize="15dp"/>
+                            </LinearLayout>
                         </LinearLayout>
 
-                        <!--알람음-->
+                        <!--반복-->
                         <LinearLayout
                             android:layout_weight="1"
-                            android:id="@+id/alarmInfo_alarmReCallLayout"
                             android:gravity="center"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-                            <ImageButton
-                                android:id="@+id/alarmInfo_alarmReCallBtn"
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:src="@drawable/autorenew_black"
-                                android:padding="10dp"
-                                android:adjustViewBounds="true"
-                                android:background="#00FFFFFF"
-                                android:scaleType="fitCenter"/>
                             <TextView
-                                android:id="@+id/alarmInfo_alarmReCallTxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:fontFamily="@font/jalnan"
+                                android:textColor="@color/black"
+                                android:textSize="17dp"
+                                android:text="반복"/>
+                            <LinearLayout
+                                android:id="@+id/alarmInfo_textReCallLayout"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="20dp"
-                                android:src="@drawable/edit_img"
-                                android:gravity="center"
-                                android:text="반복 선택"
-                                android:textSize="15dp"/>
+                                android:layout_height="50dp"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginRight="5dp"
+                                android:background="@drawable/button_type_back"
+                                android:elevation="1dp">
+                                <TextView
+                                    android:id="@+id/alarmInfo_textReCall"
+                                    android:layout_margin="5dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:fontFamily="@font/jalnan"
+                                    android:textColor="@color/black"
+                                    android:maxLines="1"
+                                    android:ellipsize="marquee"
+                                    android:background="@null"
+                                    android:gravity="center"
+                                    android:textSize="15dp"/>
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
