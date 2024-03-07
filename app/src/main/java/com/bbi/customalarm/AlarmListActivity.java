@@ -16,6 +16,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
@@ -43,7 +44,7 @@ public class AlarmListActivity extends BaseActivity {
     private ImageView settingBtn;
     private TextView alarmCount;
     private RecyclerView alarmListView;
-    private Button addAlarmBtn;
+    private ImageButton addAlarmBtn;
     private boolean isFirstEnter = true;
 
     // 알람 리스트
@@ -149,7 +150,7 @@ public class AlarmListActivity extends BaseActivity {
         addAlarmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isAddAlarmClick) {
+                /*if(!isAddAlarmClick) {
                     isAddAlarmClick = true;
 
                     isFirstEnter = false;
@@ -163,7 +164,7 @@ public class AlarmListActivity extends BaseActivity {
                             isAddAlarmClick = false;
                         }
                     }, 1000);
-                }
+                }*/
             }
         });
 
