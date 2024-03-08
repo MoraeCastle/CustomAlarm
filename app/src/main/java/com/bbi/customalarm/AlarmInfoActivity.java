@@ -39,6 +39,7 @@ import com.bbi.customalarm.System.VibrationManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -98,7 +99,7 @@ public class AlarmInfoActivity extends BaseActivity {
         hourPicker = findViewById(R.id.alarmInfo_hourPicker);
         minutePicker = findViewById(R.id.alarmInfo_minutePicker);
         openDateBtn = findViewById(R.id.alarmInfo_openDateBtn);
-        saveDateBtn = findViewById(R.id.alarmInfo_saveDateBtn);
+        saveDateBtn = findViewById(R.id.alarmInfo_saveDateBtn); // 달력 캘린더 내 '저장하기'
         subLayout = findViewById(R.id.alarmInfo_subLayout);
         datePicker = findViewById(R.id.alarmInfo_datePicker);
         saveBtn = findViewById(R.id.alarmInfo_saveBtn);
@@ -214,16 +215,22 @@ public class AlarmInfoActivity extends BaseActivity {
                             datePicker.getYear(),
                             datePicker.getMonth() + 1,
                             datePicker.getDayOfMonth());
+
+                    Date date = new Date(System.currentTimeMillis());
+                    alarmItem.setTime(alarmItem.getStringTime(new int[]{
+                            date.getHours(),
+                            date.getMinutes() + 1
+                    }));
                 } else {
                     for (AlarmItem item : alarmItems) {
                         if (item.getId() == alarmItem.getId()) {
                             alarmItem = item;
 
-                            setUIFromData(alarmItem);
                             break;
                         }
                     }
                 }
+                setUIFromData(alarmItem);
 
                 dateTxt.setText(alarmItem.getDateToSet());
             }
@@ -601,15 +608,25 @@ public class AlarmInfoActivity extends BaseActivity {
         }
 
         editTitle.setText(item.getName());
-        ringName.setText(DocumentFile.fromSingleUri(AlarmInfoActivity.this, item.getRingUri())
-                .getName().replace(".ogg", ""));
+
+        if(item.getRingUri() != null) {
+            ringName.setText(DocumentFile.fromSingleUri(AlarmInfoActivity.this, item.getRingUri())
+                    .getName().replace(".ogg", ""));
+        } else {
+            ringName.setText(getString(R.string.default_ringType));
+        }
 
         if(!item.getVibrationType().equals("")) {
             String type = VibrationManager.getKType(item.getVibrationType());
             shakeName.setText(type);
+        } else {
+            shakeName.setText(getString(R.string.default_callType));
         }
+
         if(item.getRepeat() != 0) {
             reCallName.setText(item.getRepeat() + "분");
+        } else {
+            reCallName.setText(getResources().getString(R.string.default_reCallType));
         }
     }
 }

@@ -2,11 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_alarm"
-    android:elevation="1dp"
+    android:elevation="3dp"
+    android:layout_margin="5dp"
     android:layout_marginBottom="5dp"
     android:layout_gravity="center"
     android:background="@drawable/alarm_back"
-    android:layout_width="350dp"
+    android:layout_width="match_parent"
     android:layout_height="80dp">
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/line"

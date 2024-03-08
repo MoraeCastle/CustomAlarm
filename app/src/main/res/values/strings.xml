@@ -5,9 +5,12 @@
 
     <!--Default Value-->
     <string name="default_typeAlarmName">알람 이름</string>
-    <string name="default_ringType">알람 선택</string>
-    <string name="default_callType">진동 패턴 선택</string>
-    <string name="default_reCallType">반복 선택</string>
+    <!--<string name="default_ringType">알람 선택</string>-->
+    <!--<string name="default_callType">진동 패턴 선택</string>
+    <string name="default_reCallType">반복 선택</string>-->
+    <string name="default_ringType">선택 안함</string>
+    <string name="default_callType">선택 안함</string>
+    <string name="default_reCallType">선택 안함</string>
 
     <!--알람 설정-->
     <!--진동 패턴-->
