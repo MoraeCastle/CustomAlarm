@@ -11,6 +11,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ServiceInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
@@ -104,14 +105,21 @@ public class AlarmService extends Service {
         /*PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);*/
 
-        startForeground(1, new NotificationCompat.Builder(this,
-                Type.AlarmService) // don't forget create a notification channel first
+        android.app.Notification item = new NotificationCompat.Builder(this,
+                Type.AlarmService)
                 .setOngoing(true)
                 .setSmallIcon(R.mipmap.ic_logo)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText("알람을 울리기 위해 대기중입니다.")
                 .setContentIntent(null)
-                .build());
+                .build();
+
+        // Android 12 이상...
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            startForeground(1, item, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+        } else {
+            startForeground(1, item);
+        }
     }
 
     /**
@@ -165,9 +173,18 @@ public class AlarmService extends Service {
                 }
             }
         };
-        registerReceiver(broadcastReceiver, new IntentFilter(Type.FinishAlarm));
-        registerReceiver(broadcastReceiver, new IntentFilter(Type.ReCallAlarm));
-        registerReceiver(broadcastReceiver, new IntentFilter(Type.CheckAlarm));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13 이상
+            registerReceiver(broadcastReceiver, new IntentFilter(Type.FinishAlarm), Context.RECEIVER_EXPORTED);
+            registerReceiver(broadcastReceiver, new IntentFilter(Type.ReCallAlarm), Context.RECEIVER_EXPORTED);
+            registerReceiver(broadcastReceiver, new IntentFilter(Type.CheckAlarm), Context.RECEIVER_EXPORTED);
+        } else {
+            // Android 12 이하
+            registerReceiver(broadcastReceiver, new IntentFilter(Type.FinishAlarm));
+            registerReceiver(broadcastReceiver, new IntentFilter(Type.ReCallAlarm));
+            registerReceiver(broadcastReceiver, new IntentFilter(Type.CheckAlarm));
+        }
 
         timerCall = new Timer();
         timerCall.schedule(new TimerTask() {

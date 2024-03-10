@@ -181,7 +181,14 @@ public class AlarmPrintActivity extends BaseActivity {
                 }
             }
         };
-        registerReceiver(broadcastReceiver, new IntentFilter(Type.RefreshTime));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13 이상
+            registerReceiver(broadcastReceiver, new IntentFilter(Type.RefreshTime), Context.RECEIVER_EXPORTED);
+        } else {
+            // Android 12 이하
+            registerReceiver(broadcastReceiver, new IntentFilter(Type.RefreshTime));
+        }
 
         // 화면 깨우기.
         if(getSystemService(POWER_SERVICE) != null) {

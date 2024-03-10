@@ -557,22 +557,27 @@ public class AlarmInfoActivity extends BaseActivity {
         if (requestCode == REQUESTCODE_RINGTONE_PICKER) {
             //-- 선택된 링톤을 재생하도록 한다.
             if (resultCode == RESULT_OK) {
-                Uri ring = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                try {
+                    Uri ring = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
 
-                if (ring == null) return;
+                    if (ring == null) return;
 
-                alarmItem.setRingUri(ring);
+                    alarmItem.setRingUri(ring);
 
-                DocumentFile file = DocumentFile.fromSingleUri(this, ring);
-                if (file != null) {
-                    String fileName = file.getName().contains("ogg") ? file.getName().replace(".ogg", "") : file.getName();
+                    DocumentFile file = DocumentFile.fromSingleUri(this, ring);
+                    if (file != null) {
+                        String fileName = file.getName().contains("ogg") ? file.getName().replace(".ogg", "") : file.getName();
 
-                    if (fileName != null) {
-                        ringName.setText(fileName);
-                        //this.startRingtone( ring );
-                    } else {
-                        ringName.setText( getResources().getString(R.string.default_ringType));
+                        if (fileName != null) {
+                            ringName.setText(fileName);
+                            //this.startRingtone( ring );
+                        } else {
+                            ringName.setText( getResources().getString(R.string.default_ringType));
+                        }
                     }
+                } catch (Exception e) {
+                    getUiManager().printToast("선택할 수 없습니다. 다른 소리를 선택하세요.");
+                    ringName.setText( getResources().getString(R.string.default_ringType));
                 }
             }
         }
